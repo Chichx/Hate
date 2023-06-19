@@ -1964,35 +1964,43 @@ namespace Palometa
 
             // Obtener la URL del archivo de detecciones
             string url = "";
+            string scanTypeString = "";
             if (scanType == 1)
             {
                 url = "https://pastebin.com/raw/RDvat1kW";
+                scanTypeString = "DPS";
             }
             else if (scanType == 2)
             {
                 url = "https://pastebin.com/raw/GZPdK9iY";
+                scanTypeString = "PcaSvc";
             }
             else if (scanType == 3)
             {
                 url = "https://pastebin.com/raw/HvvE82z5";
+                scanTypeString = "LSASS";
             }
             else if (scanType == 4)
             {
                 url = "https://pastebin.com/raw/vSWp6m2q";
+                scanTypeString = "Browser";
             }
             else if (scanType == 5)
             {
                 Console.Clear();
                 Console.WriteLine("Guide:");
-                Console.WriteLine("If you use a custom URL, enter the pastebin URL (example: pastebin.com/raw/xxxxxxxx) with custom string syntax: Client:::String\n");
+                Console.WriteLine("If you use a custom URL, enter the pastebin URL (example: pastebin.com/raw/xxxxxxxx)");
+                Console.WriteLine("with custom string syntax: Client:::String");
                 Console.Write("Enter the Pastebin URL for custom strings: ");
                 url = Console.ReadLine();
+                scanTypeString = $"Custom URL (||{url}||)";
             }
 
             // Si no se proporcionó una URL personalizada, utilizar una URL predeterminada para DPSScan
             if (string.IsNullOrEmpty(url) && scanType == 5)
             {
                 url = "https://pastebin.com/raw/RDvat1kW";
+                scanTypeString = "DPS (Custom URL enter)";
             }
 
             // obtener las detecciones
@@ -2026,6 +2034,31 @@ namespace Palometa
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine($" has been detected > {xdLine}");
                 }
+                string hwid = GetHWID();
+                string userName = Environment.UserName;
+
+                var embedBuilder = new EmbedBuilder()
+                {
+                    Title = "User detected! :x:",
+                    Timestamp = DateTime.UtcNow
+                };
+                embedBuilder.AddField("User:", userName, inline: true);
+                embedBuilder.AddField("HWID:", hwid, inline: true);
+                embedBuilder.AddField("Scan Type:", scanTypeString, inline: true);
+
+                var detectedField = new StringBuilder();
+                foreach (var (client, xdLine) in found)
+                {
+                    detectedField.AppendLine($"{client} has been detected with {xdLine}.");
+                }
+                embedBuilder.AddField("Detected:", "```" + detectedField.ToString() + "```");
+
+                embedBuilder.WithColor(Color.DarkRed);
+                embedBuilder.WithFooter($"Cheats detected: {found.Count}");
+
+                // Configura el webhook y envía el mensaje
+                var webhook = new DiscordWebhookClient("https://discord.com/api/webhooks/1120158378455482520/ASoVTOjRSiPexzxDxEnTdAZFHS7NuwAJlCgPCSjElTU7caE0jmZyG4QeGeSKyKGFDt8W");
+                await webhook.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
             }
             else
             {
