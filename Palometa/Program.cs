@@ -106,7 +106,7 @@ namespace Palometa
                     return;
                 }
 
-                if (version != "1.9")
+                if (version != "2.0")
                 {
                     Console.Title = $"Palometa | Old version! | New version: {version}";
 
@@ -2089,7 +2089,8 @@ namespace Palometa
             Console.WriteLine("9. Executed Programs list");
             Console.WriteLine("10. Autopsy");
             Console.WriteLine("11. Journal Files");
-            Console.WriteLine("12. Menu");
+            Console.WriteLine("11. OsForensics");
+            Console.WriteLine("13. Menu");
             Console.WriteLine(" ");
             Console.Write("Choose an option » ");
             string programInput = Console.ReadLine();
@@ -2103,7 +2104,7 @@ namespace Palometa
             int programType;
             if (!int.TryParse(programInput, out programType) || programType < 1 || programType > 12)
             {
-                Console.WriteLine("Invalid option. Please enter a valid option (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11 or 12).");
+                Console.WriteLine("Invalid option. Please enter a valid option (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 or 13).");
                 Thread.Sleep(1000);
                 Console.Clear();
                 Programas(args, version);
@@ -2331,6 +2332,26 @@ namespace Palometa
                 Programas(args, version);
             }
             else if (programType == 12)
+            {
+                string zipUrl = "https://osforensics.com/downloads/osf.exe";
+                string zipName = "OsForensics.exe";
+                string zipPath = Path.Combine(outputPath, zipName);
+                using (var client = new WebClient())
+                {
+                    client.DownloadFile(zipUrl, zipPath);
+                }
+
+                string ProgramPath = Path.Combine(outputPath, zipName);
+                Process.Start(ProgramPath, $"/folder \"{outputPath}\"");
+                Console.Clear();
+                Thread.Sleep(1000);
+                Console.WriteLine($"{zipName} downloaded successfully!");
+                Console.WriteLine("\n\nPress ENTER to go to the menu...");
+                Console.ReadLine();
+                Console.Clear();
+                Programas(args, version);
+            }
+            else if (programType == 13)
             {
                 Console.Clear();
                 Thread.Sleep(1000);
