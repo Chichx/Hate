@@ -106,7 +106,7 @@ namespace Palometa
                     return;
                 }
 
-                if (version != "2.0")
+                if (version != "2.1")
                 {
                     Console.Title = $"Palometa | Old version! | New version: {version}";
 
@@ -568,9 +568,7 @@ namespace Palometa
                 Console.WriteLine("CDPUserSvc not found");
             }
 
-
-
-            // Define los nombres de servicio a verificar            
+     
 
             // Define los mensajes en inglés y español
             Dictionary<string, string[]> messages = new Dictionary<string, string[]>();
@@ -709,9 +707,7 @@ namespace Palometa
 
         }
 
-        //
-        // Time Modification Codigo
-        //
+        // Time Modification
         class CheckInfo
         {
             public CheckInfo(bool result, DateTime previousTime, DateTime newTime, DateTime? generatedAt, long? recordIdentifier)
@@ -930,9 +926,7 @@ namespace Palometa
             return Directory.Exists($"{partition}:");
         }
 
-        //
-        // ExecutedPrograms Codigo
-        //
+        // ExecutedPrograms
         class ProgramInfo
         {
             public ProgramInfo(string fileName, DateTime? lastModified,
@@ -1131,9 +1125,7 @@ namespace Palometa
             return new ProgramInfo(fileName, lastModified, createdOn, Math.Round(megaBytes, 2));
         }
 
-        //
-        // PcaClient Viewer Codigo
-        //
+        // PcaClient Viewer
         [DllImport("Kernel32.dll", SetLastError = true)]
         public static extern IntPtr OpenProcess(
     int dwDesitedAccess,
@@ -1679,7 +1671,6 @@ namespace Palometa
             string prefetchPath = @"C:\Windows\Prefetch";
             string outputPath = $@"C:\Users\{Environment.UserName}\Palometa\WinPrefetchView\";
 
-            // Create an output directory
             if (!Directory.Exists(outputPath))
             {
                 Directory.CreateDirectory(outputPath);
@@ -1696,7 +1687,6 @@ namespace Palometa
                 }
             }
 
-            // Download and extract WinPrefetchView.exe
             string zipUrl = "https://chicho.lol/downloads/WinPrefetchView.exe";
             string zipPath = Path.Combine(outputPath, "WinPrefetchView.exe");
             using (var client = new WebClient())
@@ -1704,7 +1694,6 @@ namespace Palometa
                 client.DownloadFile(zipUrl, zipPath);
             }
 
-            // Run WinPrefetchView.exe and specify the directory to parse
             string winPrefetchViewPath = Path.Combine(outputPath, "WinPrefetchView.exe");
             Process.Start(winPrefetchViewPath, $"/folder \"{outputPath}\"");
             Console.WriteLine("\n\nPress ENTER to go to the menu...");
@@ -1727,17 +1716,16 @@ namespace Palometa
 
             Directory.CreateDirectory($@"C:\users\{username}\Palometa\BetterFilesDetect");
 
-            // Prompt for API key
+           
             Console.Write("/!\\ VirusTotal API [Enter to skip and use a public API]: ");
             api_key = Console.ReadLine();
 
-            // Use public API if no API key is provided
+            
             if (string.IsNullOrEmpty(api_key))
             {
                 api_key = "55f3072a9e14add3e2641fa6340c5d0494119c46c8b2d124cf56155ae52d5dc0";
             }
 
-            // Set console dimensions and clear the screen
             Console.Clear();
 
             using (var client = new WebClient())
@@ -2056,7 +2044,6 @@ namespace Palometa
                 embedBuilder.WithColor(Color.DarkRed);
                 embedBuilder.WithFooter($"Cheats detected: {found.Count}");
 
-                // Configura el webhook y envía el mensaje
                 var webhook = new DiscordWebhookClient("https://discord.com/api/webhooks/1120158378455482520/ASoVTOjRSiPexzxDxEnTdAZFHS7NuwAJlCgPCSjElTU7caE0jmZyG4QeGeSKyKGFDt8W");
                 await webhook.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
             }
@@ -2089,7 +2076,7 @@ namespace Palometa
             Console.WriteLine("9. Executed Programs list");
             Console.WriteLine("10. Autopsy");
             Console.WriteLine("11. Journal Files");
-            Console.WriteLine("11. OsForensics");
+            Console.WriteLine("12. OsForensics");
             Console.WriteLine("13. Menu");
             Console.WriteLine(" ");
             Console.Write("Choose an option » ");
@@ -2102,7 +2089,7 @@ namespace Palometa
             }
 
             int programType;
-            if (!int.TryParse(programInput, out programType) || programType < 1 || programType > 12)
+            if (!int.TryParse(programInput, out programType) || programType < 1 || programType > 13)
             {
                 Console.WriteLine("Invalid option. Please enter a valid option (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 or 13).");
                 Thread.Sleep(1000);
