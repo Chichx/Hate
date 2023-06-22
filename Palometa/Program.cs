@@ -22,6 +22,8 @@ using System.Security.Cryptography;
 using Newtonsoft.Json;
 using System.ServiceProcess;
 using System.Reflection;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
+using System.Xml.Linq;
 
 namespace Palometa
 
@@ -376,7 +378,7 @@ namespace Palometa
                     case 7:
                         Console.Title = $"Palometa | Amcache Hash Detector | Version: {version}";
                         Console.Clear();
-                        Amcache(args, version).Wait();
+                        Amcache(args, version);
                         break;
                     case 8:
                         Console.Title = $"Palometa | Unicode Detector | Version: {version}";
@@ -1287,50 +1289,16 @@ namespace Palometa
             return (b >= 32 && b <= 126) || b == 10 || b == 13 || b == 9;
         }
 
-        static async Task Amcache(string[] args, string version)
+        static void Amcache(string[] args, string version)
         {
-            string Palometadir = $@"C:\Users\{Environment.UserName}\Palometa\Amcachehash";
+            string username = Environment.UserName;
+            string Palometadir = $@"C:\Users\{username}\Palometa\Amcachehash";
             if (Directory.Exists(Palometadir))
             {
                 Directory.Delete(Palometadir, true);
             }
 
-            Directory.CreateDirectory($@"C:\Users\{Environment.UserName}\Palometa\Amcachehash");
-
-            string download = "https://chicho.lol/downloads/AM.exe";
-            string carpeta = $@"C:\Users\{Environment.UserName}\Palometa\Amcachehash\";
-            string adonde = Path.Combine(carpeta, Path.GetFileName(download));
-
-            using (WebClient client = new WebClient())
-            {
-                client.DownloadFile(download, adonde);
-            }
-
-            string username = Environment.UserName;
-
-            string arguments = $@"-f C:\Windows\appcompat\Programs\Amcache.hve --csv C:\Users\{username}\Palometa\Amcachehash\";
-
-            ProcessStartInfo startInfo = new ProcessStartInfo
-            {
-                FileName = $@"C:\users\{username}\Palometa\Amcachehash\AM.exe",
-                Arguments = arguments,
-                RedirectStandardOutput = false,
-                UseShellExecute = false,
-                CreateNoWindow = true
-            };
-
-            using (Process process = new Process())
-            {
-                process.StartInfo = startInfo;
-                process.Start();
-                process.WaitForExit();
-            }
-
-            string carpetacsv = $@"C:\Users\{Environment.UserName}\Palometa\Amcachehash\";
-
-            string[] csvarchivos = Directory.GetFiles(carpetacsv, "*.csv");
-
-            string csvnombres = csvarchivos.FirstOrDefault(f => f.Contains("Amcache_UnassociatedFileEntries"));
+            Directory.CreateDirectory($@"C:\Users\{username}\Palometa\Amcachehash");
 
             string virusTotalApiKey = "55f3072a9e14add3e2641fa6340c5d0494119c46c8b2d124cf56155ae52d5dc0";
             Console.WriteLine($"[!] I recommend to use your private api to avoid Public APIs saturation");
@@ -1340,102 +1308,217 @@ namespace Palometa
             {
                 virusTotalApiKey = newApiKey;
             }
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine("Amcache hash detector");
+            Amcache();
+            Parse(args, version);
 
             Console.Clear();
-            Console.WriteLine(@"
-            > Amcache hash detector <
-                wait until i scan");
+            Console.WriteLine("");
+            Console.WriteLine("Select an option:");
+            Console.WriteLine("1. Query the entire Amcache.");
+            Console.WriteLine("2. Query Amcache data since last reboot. [Reduces API ratelimit]");
+            Console.Write("Enter your choice: ");
+            string choice = Console.ReadLine();
 
-            if (csvnombres != null)
+            if (choice == "1")
             {
-                using (var reader = new StreamReader(csvnombres))
-                {
-                    var headerLine = await reader.ReadLineAsync();
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Clear();
+                Read();
+            }
+            else if (choice == "2")
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.Clear();
+                ReadBoot(args, version);
+            }
+            else
+            {
+                Environment.Exit(0);
+            }
 
-                    DateTime bootTime = DateTime.Now.AddMilliseconds(-Environment.TickCount);
-                    bool encontradosAmcache = false;
+            using (StreamReader reader = new StreamReader($@"C:\Users\{username}\Palometa\Amcachehash\res.json"))
+            {
+                using (StreamWriter writer = new StreamWriter($@"C:\Users\{username}\Palometa\Amcachehash\res.txt", append: false, encoding: Encoding.UTF8))
+                {
+                    string line;
+                    while ((line = reader.ReadLine()) != null)
+                    {
+                        dynamic data = JsonConvert.DeserializeObject(line);
+                        string sha1 = data.SHA1;
+                        string fullPath = data.FullPath;
+                        string name = data.Name;
+                        string fileKeyLastWriteTimestamp = data.FileKeyLastWriteTimestamp;
+                        string idd = data.ID;
+                        string API_KEY = virusTotalApiKey;
+
+
+                        if (!string.IsNullOrEmpty(sha1))
+                        {
+                            dynamic response = QueryVirusTotal(sha1, API_KEY);
+
+                            if (response != null)
+                            {
+                                List<string> names = response.data.attributes.names.ToObject<List<string>>();
+                                names = names.Where(x => !string.IsNullOrEmpty(x)).ToList();
+                                int positives = response.data.attributes.last_analysis_stats.malicious;
+                                int jajahola = response.data.attributes.last_analysis_stats.undetected;
+
+                                if (names.Count > 0)
+                                {
+                                    writer.WriteLineAsync($"[+] SHA1: {sha1}");
+                                    writer.WriteLineAsync($"[+] FullPath: {fullPath}");
+                                    writer.WriteLineAsync($"[+] Name: {name}");
+                                    writer.WriteLineAsync($"[+] Names: {string.Join(", ", names)}");
+                                    writer.WriteLineAsync($"[+] Executed on: {fileKeyLastWriteTimestamp}");
+                                    writer.WriteLineAsync($"[+] Scan URL: https://www.virustotal.com/gui/file/{idd}/detection");
+                                    writer.WriteLineAsync($"- - - - - - - - - - - - - - - - - - - - - -");
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+
+            Process.Start($@"C:\Users\{username}\Palometa\Amcachehash\res.txt");
+        }
+
+        static void Amcache()
+        {
+            using (WebClient client = new WebClient())
+            {
+                string url = "https://chicho.lol/downloads/AM.exe";
+                string filePath = $@"C:\Users\{Environment.UserName}\Palometa\Amcachehash\AM.exe";
+                client.DownloadFile(url, filePath);
+            }
+        }
+
+        static void Parse(string[] args, string version)
+        {
+            string filePath = $@"C:\Users\{Environment.UserName}\Palometa\Amcachehash\AM.exe";
+            string arguments = $@"-f ""C:\Windows\appcompat\Programs\Amcache.hve"" --csv C:\Users\{Environment.UserName}\Palometa\Amcachehash\";
+
+            ProcessStartInfo startInfo = new ProcessStartInfo();
+            startInfo.FileName = filePath;
+            startInfo.Arguments = arguments;
+            startInfo.UseShellExecute = false;
+            startInfo.RedirectStandardOutput = true;
+            startInfo.CreateNoWindow = true;
+
+            using (Process process = new Process())
+            {
+                process.StartInfo = startInfo;
+                process.Start();
+                process.WaitForExit();
+            }
+        }
+
+        static void ReadBoot(string[] args, string version)
+        {
+            string folderPath = $@"C:\Users\{Environment.UserName}\Palometa\Amcachehash";
+            string[] columnas_deseadas = { "SHA1", "IsOsComponent", "FullPath", "FileKeyLastWriteTimestamp" };
+            List<Dictionary<string, string>> datos_filtrados_total = new List<Dictionary<string, string>>();
+            DateTime boot_time = DateTime.Now.AddMilliseconds(-Environment.TickCount);
+
+            foreach (string filePath in Directory.EnumerateFiles(folderPath, "*Amcache_UnassociatedFileEntries.csv", SearchOption.AllDirectories))
+            {
+                using (StreamReader reader = new StreamReader(filePath, Encoding.UTF8))
+                {
+                    string[] headers = reader.ReadLine().Split(',');
 
                     while (!reader.EndOfStream)
                     {
-                        var line = await reader.ReadLineAsync();
-                        var values = line.Split(',');
+                        string[] values = reader.ReadLine().Split(',');
+                        Dictionary<string, string> datos_fila_filtrados = headers.Zip(values, (h, v) => new { Header = h, Value = v })
+                                                                               .Where(x => columnas_deseadas.Contains(x.Header))
+                                                                               .ToDictionary(x => x.Header, x => x.Value);
 
-                        string fileKeyLastWriteTimestampString = values[2];
-                        DateTime fileKeyLastWriteTimestamp;
-                        if (!DateTime.TryParse(fileKeyLastWriteTimestampString, out fileKeyLastWriteTimestamp))
-                        {
-                            continue;
-                        }
-
-                        if (fileKeyLastWriteTimestamp < bootTime)
-                        {
-                            continue;
-                        }
-
-                        string sha1 = values[3];
-                        string fullPath = values[5];
-                        string name = values[6];
-                        string isOsComponent = values[8];
-                        string vtr = await GetVirusTotalResult(virusTotalApiKey, sha1);
-
-                        if (!string.IsNullOrEmpty(fullPath))
-                        {
-                            encontradosAmcache = true;
-                        }
-
-                        try
-                        {
-                            JObject virusTotalJson = JObject.Parse(vtr);
-                            JArray names = (JArray)virusTotalJson["data"]["attributes"]["names"];
-                            string idd = (string)virusTotalJson["data"]["id"];
-
-                            string filePath = $@"C:\Users\{Environment.UserName}\Palometa\Amcachehash\res.txt";
-
-                            using (StreamWriter writer = new StreamWriter(filePath, true))
-                            {
-                                await writer.WriteLineAsync($"[+] SHA1: {sha1}");
-                                await writer.WriteLineAsync($"[+] FullPath: {fullPath}");
-                                await writer.WriteLineAsync($"[+] Name: {name}");
-                                await writer.WriteLineAsync($"[+] Names: {string.Join(", ", names)}");
-                                await writer.WriteLineAsync($"[+] Executed on: {fileKeyLastWriteTimestamp}");
-                                await writer.WriteLineAsync($"[+] Scan URL: https://www.virustotal.com/gui/file/{idd}/detection");
-                                await writer.WriteLineAsync($"- - - - - - - - - - - - - - - - - - - - - -");
-                            }
-                            Process.Start("notepad.exe", $@"C:\Users\{Environment.UserName}\Palometa\Amcachehash\res.txt");
-                            Process.Start("explorer.exe", $@"C:\Users\{Environment.UserName}\Palometa\Amcachehash\files");
-                        }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine(ex);
-                            Console.ReadKey();
-                        }
+                        datos_filtrados_total.Add(datos_fila_filtrados);
                     }
-                    if (!encontradosAmcache)
+                }
+            }
+
+            var datos_filtrados_isoscomponent = datos_filtrados_total.Where(x => x["IsOsComponent"] == "False");
+
+            var datos_filtrados_despues_boot = datos_filtrados_isoscomponent.Where(x => DateTime.Parse(x["FileKeyLastWriteTimestamp"]) >= boot_time);
+
+            var datos_filtrados_ordenados = datos_filtrados_despues_boot.OrderByDescending(x => DateTime.Parse(x["FileKeyLastWriteTimestamp"]));
+
+            if (datos_filtrados_ordenados.Any())
+            {
+                using (StreamWriter writer = new StreamWriter($@"C:\Users\{Environment.UserName}\Palometa\Amcachehash\res.json", append: true))
+                {
+                    foreach (var datos_fila in datos_filtrados_ordenados)
                     {
-                        Console.WriteLine("\nNo amcache files found.");
-                        Console.Write("\nPress ENTER to go to the menu...");
-                        Console.ReadLine();
-                        Console.Clear();
-                        GUI(args, version).Wait();
+                        writer.WriteLine(JsonConvert.SerializeObject(datos_fila));
                     }
+                }
+            }
+            else
+            {
+                Console.Clear();
+                Console.WriteLine("No data has been detected since the last reboot");
+                Thread.Sleep(2000);
+                GUI(args, version).Wait();
+            }
+        }
 
+        static void Read()
+        {
+            string folderPath = $@"C:\Users\{Environment.UserName}\Palometa\Amcachehash";
+            string[] columnas_deseadas = { "SHA1", "IsOsComponent", "FullPath", "FileKeyLastWriteTimestamp" };
+            List<Dictionary<string, string>> datos_filtrados_total = new List<Dictionary<string, string>>();
+
+            foreach (string filePath in Directory.EnumerateFiles(folderPath, "*Amcache_UnassociatedFileEntries.csv", SearchOption.AllDirectories))
+            {
+                using (StreamReader reader = new StreamReader(filePath, Encoding.UTF8))
+                {
+                    string[] headers = reader.ReadLine().Split(',');
+
+                    while (!reader.EndOfStream)
+                    {
+                        string[] values = reader.ReadLine().Split(',');
+                        Dictionary<string, string> datos_fila_filtrados = headers.Zip(values, (h, v) => new { Header = h, Value = v })
+                                                                               .Where(x => columnas_deseadas.Contains(x.Header))
+                                                                               .ToDictionary(x => x.Header, x => x.Value);
+
+                        datos_filtrados_total.Add(datos_fila_filtrados);
+                    }
+                }
+            }
+
+            var datos_filtrados_isoscomponent = datos_filtrados_total.Where(x => x["IsOsComponent"] == "False");
+
+            using (StreamWriter writer = new StreamWriter($@"C:\Users\{Environment.UserName}\Palometa\Amcachehash\res.json", append: true))
+            {
+                foreach (var datos_fila in datos_filtrados_isoscomponent)
+                {
+                    writer.WriteLine(JsonConvert.SerializeObject(datos_fila));
                 }
             }
         }
 
-        static async Task<string> GetVirusTotalResult(string apiKey, string sha1)
+        static dynamic QueryVirusTotal(string sha1, string API_KEY)
         {
-            using (var httpClient = new HttpClient())
+            string url = $"https://www.virustotal.com/api/v3/files/{sha1}";
+
+            using (HttpClient client = new HttpClient())
             {
-                string url = $"https://www.virustotal.com/api/v3/files/{sha1}";
+                client.DefaultRequestHeaders.Add("x-apikey", API_KEY);
+                HttpResponseMessage response = client.GetAsync(url).Result;
 
-                httpClient.DefaultRequestHeaders.Add("x-apikey", apiKey);
-
-                var response = await httpClient.GetAsync(url);
-
-                string content = await response.Content.ReadAsStringAsync();
-
-                return content;
+                if (response.IsSuccessStatusCode)
+                {
+                    string result = response.Content.ReadAsStringAsync().Result;
+                    dynamic data = JsonConvert.DeserializeObject(result);
+                    return data;
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 
@@ -2049,7 +2132,7 @@ namespace Palometa
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.Write($"{client}");
                     Console.ForegroundColor = ConsoleColor.White;
-                    Console.WriteLine($" has been detected > {xdLine}");
+                    Console.WriteLine($" has been detected");
                 }
                 string hwid = GetHWID();
                 string userName = Environment.UserName;
