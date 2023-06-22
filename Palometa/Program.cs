@@ -548,7 +548,7 @@ namespace Palometa
             Console.WriteLine("Services check.");
             Regex regex = new Regex(@"CDPUserSvc_[a-zA-Z0-9]{5}");
             bool founde = false;
-            List<string> serviceNames = new List<string> { "DPS", "Pcasvc", "Diagtrack", "Sysmain", "SgrmBroker", "Appinfo", "Dusmsvc", "DcomLaunch" };
+            List<string> serviceNames = new List<string> { "DPS", "Pcasvc", "Diagtrack", "Sysmain", "SgrmBroker", "Appinfo", "Dusmsvc", "DcomLaunch", "BFE", "MpsSvc" };
 
 
             foreach (var service in ServiceController.GetServices())
@@ -1002,7 +1002,7 @@ namespace Palometa
                 }
             }
 
-            getStore(args, version); getMuiCache(args, version);
+            getStore(args, version); getAppSwitched(args, version); getMuiCache(args, version);
 
             foreach (string p in programs)
                 programsInfo.Add(getProgramInfo(p));
@@ -1056,6 +1056,35 @@ namespace Palometa
         static void getStore(string[] args, string version)
         {
             string registryPath = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store";
+
+            RegistryKey key = Registry.CurrentUser.OpenSubKey(registryPath);
+            if (key == null)
+            {
+                Console.WriteLine($"The specified path was not found. ({registryPath})");
+                Thread.Sleep(2000);
+                Console.Clear();
+                getAppSwitched(args, version);
+                return;
+            }
+
+            Regex rgx = new Regex(@"^\w:\\.+.exe$");
+            string[] values = key.GetValueNames();
+
+            foreach (string v in values)
+            {
+                if (!Char.IsUpper(v[0])) continue;
+
+                Match match = rgx.Match(v);
+                if (!match.Success) continue;
+
+                string program = match.Groups[0].Value;
+                programs.Add(program);
+            }
+        }
+
+        static void getAppSwitched(string[] args, string version)
+        {
+            string registryPath = @"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FeatureUsage\AppSwitched";
 
             RegistryKey key = Registry.CurrentUser.OpenSubKey(registryPath);
             if (key == null)
