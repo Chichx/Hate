@@ -106,7 +106,7 @@ namespace Palometa
                     return;
                 }
 
-                if (version != "2.1")
+                if (version != "2.2")
                 {
                     Console.Title = $"Palometa | Old version! | New version: {version}";
 
