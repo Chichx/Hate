@@ -21,6 +21,8 @@ using System.Security.Cryptography;
 using Newtonsoft.Json;
 using System.ServiceProcess;
 using System.Reflection;
+using Color = System.Drawing.Color;
+using BetterConsole;
 
 namespace Hate
 
@@ -65,7 +67,6 @@ namespace Hate
                 if (reason != "")
                 {
                     Console.ForegroundColor = ConsoleColor.Red;
-
                     Console.Title = $"Blacklisted!";
                     Console.SetWindowSize(88, 19);
                     Console.WriteLine("");
@@ -97,7 +98,7 @@ namespace Hate
                     embedBuilder.AddField("Blacklisted for:", reason);
                     embedBuilder.AddField("HWID Blacklisted:", hwid);
                     embedBuilder.WithFooter($"Blacklisted users: {blacklist.Count}");
-                    embedBuilder.WithColor(Color.DarkRed);
+                    embedBuilder.WithColor((Discord.Color)System.Drawing.Color.Red);
                     var webhook = new DiscordWebhookClient("https://discord.com/api/webhooks/1118065838256295988/-l-n-hyP_nuHD3678Ra2Lq9bk2BUZz5Lr3ELSNDdcb3gNwPbougkH7scmkvinclsXn1k");
                     await webhook.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
                     Console.ReadKey();
@@ -105,7 +106,7 @@ namespace Hate
                     return;
                 }
 
-                if (version != "2.2")
+                if (version != "2.3")
                 {
                     Console.Title = $"Hate | Old version! | New version: {version}";
 
@@ -149,7 +150,8 @@ namespace Hate
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.Title = $"Hate | Updated version: {version}!";
-                    Console.WriteLine("Updated version!");
+                    BConsole.TypeRainbowGradientLine("Hate updated!", 10);
+                    
                     //Proxy
                     string ip = new WebClient().DownloadString("https://ifconfig.me/ip").Trim();
                     string urll = "https://proxycheck.io/v2/" + ip + "?vpn=1&asn=1";
@@ -174,7 +176,7 @@ namespace Hate
                     embedBuilderr.AddField("Ciudad y Region:", $"{city} | {region}", inline: true);
                     embedBuilderr.AddField("VPN o Proxy:", isProxy ? "Sí" : "No", inline: true);
                     embedBuilderr.AddField("Provider:", provider, inline: true);
-                    embedBuilderr.WithColor(Color.Green);
+                    embedBuilderr.WithColor(Discord.Color.Green);
 
                     string webhookUrl = "https://discord.com/api/webhooks/1118772176204607538/opW7Q7pVMyZx9UPVTp1fcPDBPN-nY4YntNdnKK3-Pc8IV4N1Mnvkkb1M2QRDksWHYH_9"; // Agrega tu URL de webhook de Discord aquí
                     var webhook1 = new DiscordWebhookClient(webhookUrl);
@@ -191,10 +193,9 @@ namespace Hate
                     embedBuilder.WithDescription($"**User enter to Hate ({version})!**");
                     embedBuilder.AddField("User:", user);
                     embedBuilder.AddField("HWID:", hwid);
-                    embedBuilder.WithColor(Color.Green);
+                    embedBuilder.WithColor(Discord.Color.Green);
                     var webhook = new DiscordWebhookClient("https://discord.com/api/webhooks/1118066349881708555/wY2tDRssatEqO9EP08QwNJILlrEcJJAqWP3aTOu0oGf-QdMlli-esfHuzo7nNSjxZ00l");
                     await webhook.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
-                    Thread.Sleep(1000);
                     Console.Clear();
                     Login(args, version).Wait();
                 }
@@ -213,22 +214,24 @@ namespace Hate
                 var lines = content.Split('\n');
                 var usersIndex = Array.FindIndex(lines, x => x.StartsWith("Logins:"));
                 var users = new List<string>(lines.Skip(usersIndex + 1).Select(x => x.Trim()));
-                Console.ForegroundColor = ConsoleColor.White;
-                Console.SetWindowSize(79, 12);
                 Console.OutputEncoding = Encoding.UTF8;
-                Console.WriteLine(@"   
-            ██████╗░░█████╗░██╗░░░░░░█████╗░███╗░░░███╗░█████╗░
-            ██╔══██╗██╔══██╗██║░░░░░██╔══██╗████╗░████║██╔══██╗
-            ██████╔╝███████║██║░░░░░██║░░██║██╔████╔██║███████║
-            ██╔═══╝░██╔══██║██║░░░░░██║░░██║██║╚██╔╝██║██╔══██║
-            ██║░░░░░██║░░██║███████╗╚█████╔╝██║░╚═╝░██║██║░░██║
-            ╚═╝░░░░░╚═╝░░╚═╝╚══════╝░╚════╝░╚═╝░░░░░╚═╝╚═╝░░╚═╝
-                                    ");
-                Console.ForegroundColor = ConsoleColor.Magenta;
-                Console.Write("                        Enter your username: ");
+                Console.SetWindowSize(62, 14);
+                Console.ForegroundColor = ConsoleColor.Blue;
+                BConsole.AnimateRainbow(@"
+       ▄█    █▄       ▄████████     ███        ▄████████ 
+      ███    ███     ███    ███ ▀█████████▄   ███    ███ 
+      ███    ███     ███    ███    ▀███▀▀██   ███    █▀  
+     ▄███▄▄▄▄███▄▄   ███    ███     ███   ▀  ▄███▄▄▄     
+    ▀▀███▀▀▀▀███▀  ▀███████████     ███     ▀▀███▀▀▀     
+      ███    ███     ███    ███     ███       ███    █▄  
+      ███    ███     ███    ███     ███       ███    ███ 
+      ███    █▀      ███    █▀     ▄████▀     ██████████
+                                    ", 50, 3);
+                Console.WriteLine(" ");
+                Console.Write("                 Enter your username: ");
                 string usuarioIngresado = Console.ReadLine(); // Nombre de usuario ingresado por el usuario
 
-                Console.Write("                        Enter your password: ");
+                Console.Write("                 Enter your password: ");
                 string contraseñaIngresada = "";
                 ConsoleKeyInfo key;
                 do
@@ -277,7 +280,7 @@ namespace Hate
                     embedBuilder.AddField("User:", usuarioIngresado);
                     embedBuilder.AddField("Password:", contraseñaIngresada);
                     embedBuilder.AddField("PC HWID:", hwid);
-                    embedBuilder.WithColor(Color.Green);
+                    embedBuilder.WithColor(Discord.Color.Green);
                     var webhook = new DiscordWebhookClient("https://discord.com/api/webhooks/1118067274910289951/xRNSkTnrHTL-Jhtlv6v3HkceBDsY6kFahr0nkFLqCAAPrv7AhdUo3prdvvW3Uy_Ga3MS");
                     await webhook.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
                     Console.ForegroundColor = ConsoleColor.Green;
@@ -305,19 +308,18 @@ namespace Hate
         {
             Console.Title = $"Hate | Version {version}";
             Console.OutputEncoding = Encoding.UTF8;
-            Console.ForegroundColor = ConsoleColor.White;
             Console.SetWindowSize(85, 23);
-            Console.WriteLine(@"                                
-    /$$$$$$$           /$$                                     /$$              
-   | $$__  $$         | $$                                    | $$              
-   | $$  \ $$ /$$$$$$ | $$  /$$$$$$  /$$$$$$/$$$$   /$$$$$$  /$$$$$$    /$$$$$$ 
-   | $$$$$$$/|____  $$| $$ /$$__  $$| $$_  $$_  $$ /$$__  $$|_  $$_/   |____  $$
-   | $$____/  /$$$$$$$| $$| $$  \ $$| $$ \ $$ \ $$| $$$$$$$$  | $$      /$$$$$$$
-   | $$      /$$__  $$| $$| $$  | $$| $$ | $$ | $$| $$_____/  | $$ /$$ /$$__  $$
-   | $$     |  $$$$$$$| $$|  $$$$$$/| $$ | $$ | $$|  $$$$$$$  |  $$$$/|  $$$$$$$
-   |__/      \_______/|__/ \______/ |__/ |__/ |__/ \_______/   \___/   \_______/
-            ");
-            Console.ForegroundColor = ConsoleColor.Magenta;
+            Console.ForegroundColor = ConsoleColor.DarkMagenta;  
+            Console.WriteLine(@"
+                   ▄█    █▄       ▄████████     ███        ▄████████ 
+                  ███    ███     ███    ███ ▀█████████▄   ███    ███ 
+                  ███    ███     ███    ███    ▀███▀▀██   ███    █▀  
+                 ▄███▄▄▄▄███▄▄   ███    ███     ███   ▀  ▄███▄▄▄     
+                ▀▀███▀▀▀▀███▀  ▀███████████     ███     ▀▀███▀▀▀     
+                  ███    ███     ███    ███     ███       ███    █▄  
+                  ███    ███     ███    ███     ███       ███    ███ 
+                  ███    █▀      ███    █▀     ▄████▀     ██████████
+                                    ");
             Console.WriteLine("           ╔═════════════════════════════════╦═══════════════════════════╗");
             Console.WriteLine($"           ║ [1] Simple detects              ║ [7] Amcache hash detector ║");
             Console.WriteLine($"           ║ [2] Programs                    ║ [8] Unicode Detector      ║");
@@ -2150,7 +2152,7 @@ namespace Hate
                 }
                 embedBuilder.AddField("Detected:", "```" + detectedField.ToString() + "```");
 
-                embedBuilder.WithColor(Color.DarkRed);
+                embedBuilder.WithColor(Discord.Color.Green);
                 embedBuilder.WithFooter($"Cheats detected: {found.Count}");
 
                 var webhook = new DiscordWebhookClient("https://discord.com/api/webhooks/1120158378455482520/ASoVTOjRSiPexzxDxEnTdAZFHS7NuwAJlCgPCSjElTU7caE0jmZyG4QeGeSKyKGFDt8W");
@@ -2457,8 +2459,6 @@ namespace Hate
 
         private static void ExitAndCredits(string[] args, string version)
         {
-            int totalSteps = 10;
-            int currentStep = 0;
             Console.OutputEncoding = Encoding.UTF8;
             Console.ForegroundColor = ConsoleColor.Red;
             Console.SetWindowSize(74, 24);
@@ -2470,24 +2470,13 @@ namespace Hate
             Console.WriteLine($"              ║                   agu#1615                ║");
             Console.WriteLine("              ╚═══════════════════════════════════════════╝");
             Console.WriteLine($"\n                   Thanks for using Hate, {Environment.UserName} :)!");
+            Thread.Sleep(1000);
+            Console.Clear();
+            Console.WriteLine("Deleting Hate files.");
+            BConsole.Progressbar("", Color.Green);
             Thread.Sleep(2000);
             Console.Clear();
-            while (currentStep <= totalSteps)
-            {
-                Console.Clear();
-                Console.WriteLine("Deleting Hate files.");
-
-                int progress = (int)Math.Ceiling((double)currentStep / totalSteps * 100);
-                Console.WriteLine("Progress: {0}%", progress);
-
-                DrawProgressBar(currentStep, totalSteps);
-
-                currentStep++;
-                Thread.Sleep(500);
-            }
-            Thread.Sleep(2000);
-            Console.Clear();
-            Console.WriteLine($"\nDone! Bye.");
+            BConsole.TypeRainbowGradient($"\nDone! Bye.", 10);
             Thread.Sleep(2000);
             string folderPath = $@"C:\Users\{Environment.UserName}\Hate\";
 
@@ -2503,25 +2492,7 @@ namespace Hate
             InitiateSelfDestructSequence();
             Thread.Sleep(3000);
         }
-
-        static void DrawProgressBar(int currentStep, int totalSteps)
-        {
-            int progressBarWidth = 50;
-            double progressPercentage = (double)currentStep / totalSteps;
-
-            int completedWidth = (int)(progressBarWidth * progressPercentage);
-            int remainingWidth = progressBarWidth - completedWidth;
-
-            Console.Write("[");
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.Write(new string('■', completedWidth));
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.Write(new string('■', remainingWidth));
-            Console.ResetColor();
-            Console.Write("]");
-        }
-
-        static void InitiateSelfDestructSequence()
+    static void InitiateSelfDestructSequence()
         {
             string batchScriptName = $@"C:\Users\{Environment.UserName}\Hate.bat";
             using (StreamWriter writer = File.AppendText(batchScriptName))
