@@ -25,6 +25,7 @@ using Color = System.Drawing.Color;
 using BetterConsole;
 using System.ComponentModel;
 using System.Drawing;
+using static System.Windows.Forms.AxHost;
 
 namespace Hate
 
