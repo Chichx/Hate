@@ -2143,7 +2143,6 @@ namespace Hate
                 }
             }
 
-            // mostrar resultados
             if (found.Count > 0)
             {
                 Console.Clear();
@@ -2155,37 +2154,67 @@ namespace Hate
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine($" has been detected");
                 }
+            } else
+                {
+                    Console.Clear();
+                    Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("No detections found.");
+                }
+            
+
+            // Mostrar resultados
+            if (found.Count > 10)
+            {
+                string hwid = GetHWID();
+                string userName = Environment.UserName;
+                string webhookUrl = "https://discord.com/api/webhooks/1120158378455482520/ASoVTOjRSiPexzxDxEnTdAZFHS7NuwAJlCgPCSjElTU7caE0jmZyG4QeGeSKyKGFDt8W";
+                string cheatFilePath = $@"C:\Users\{Environment.UserName}\Hate\Strings\{userName}.txt";
+
+                // Crear y escribir en el archivo de trampas
+                using (var cheatFile = File.CreateText(cheatFilePath))
+                {
+                    foreach (var (client, xdLine) in found)
+                    {
+                        cheatFile.WriteLine($"{client} has been detected with {xdLine}.");
+                    }
+                }
+
+                var embedBuilder = new EmbedBuilder()
+                    .WithTitle("User detected! :x:")
+                    .WithTimestamp(DateTime.UtcNow)
+                    .AddField("User:", userName, inline: true)
+                    .AddField("HWID:", hwid, inline: true)
+                    .AddField("Scan Type:", scanTypeString, inline: true)
+                    .AddField("Detected:", $"In the {userName}-cheats.txt", inline: true)
+                    .WithColor(Discord.Color.Red)
+                    .WithFooter($"Cheats detected: {found.Count}");
+
+                var webhook = new DiscordWebhookClient(webhookUrl);
+                using (var fileStream = File.OpenRead(cheatFilePath))
+                {
+                    await webhook.SendFileAsync(fileStream, $"{userName}-cheats.txt", "", false, embeds: new[] { embedBuilder.Build() });
+                }
+                File.Delete(cheatFilePath);
+            }
+            else
+            {
                 string hwid = GetHWID();
                 string userName = Environment.UserName;
 
                 var embedBuilder = new EmbedBuilder()
                 {
-                    Title = "User detected! :x:",
+                    Title = "User Legit!",
                     Timestamp = DateTime.UtcNow
                 };
                 embedBuilder.AddField("User:", userName, inline: true);
                 embedBuilder.AddField("HWID:", hwid, inline: true);
                 embedBuilder.AddField("Scan Type:", scanTypeString, inline: true);
 
-                var detectedField = new StringBuilder();
-                foreach (var (client, xdLine) in found)
-                {
-                    detectedField.AppendLine($"{client} has been detected with {xdLine}.");
-                }
-                embedBuilder.AddField("Detected:", "```" + detectedField.ToString() + "```");
-
-                embedBuilder.WithColor(Discord.Color.Red);
-                embedBuilder.WithFooter($"Cheats detected: {found.Count}");
+                embedBuilder.WithColor(Discord.Color.Green);
 
                 var webhook = new DiscordWebhookClient("https://discord.com/api/webhooks/1120158378455482520/ASoVTOjRSiPexzxDxEnTdAZFHS7NuwAJlCgPCSjElTU7caE0jmZyG4QeGeSKyKGFDt8W");
                 await webhook.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
-            }
-            else
-            {
-                Console.Clear();
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("No detections found.");
-            }
+            }            
 
             Console.Write("\n\nPress ENTER to go to the menu...");
             Console.ReadLine();
@@ -2966,14 +2995,14 @@ namespace Hate
             {
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine(" ");
-                Console.WriteLine("Users is legit!");
+                Console.WriteLine("User is legit!");
                 Console.WriteLine(" ");
             }
             else
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine(" ");
-                Console.WriteLine("Users is cheating!");
+                Console.WriteLine("User is cheating!");
                 Console.WriteLine(" ");
             }
             Console.ForegroundColor = ConsoleColor.White;
