@@ -23,12 +23,29 @@ using System.ServiceProcess;
 using System.Reflection;
 using Color = System.Drawing.Color;
 using BetterConsole;
+using System.ComponentModel;
+using System.Drawing;
 
 namespace Hate
 
 {
     class Program
     {
+        private static Detect detect = new Detect();
+        private static Dictionary<string, List<string>> jsonData = new Dictionary<string, List<string>>();
+        public class Detect
+        {
+            public void Add(string value, Dictionary<string, List<string>> data, string category)
+            {
+                data.TryGetValue(category, out List<string> detectionList);
+                if (detectionList == null)
+                {
+                    detectionList = new List<string>();
+                    data[category] = detectionList;
+                }
+                detectionList.Add(value);
+            }
+        }
         static async Task Main(string[] args)
 
         {
@@ -106,7 +123,7 @@ namespace Hate
                     return;
                 }
 
-                if (version != "2.3")
+                if (version != "2.4")
                 {
                     Console.Title = $"Hate | Old version! | New version: {version}";
 
@@ -326,9 +343,9 @@ namespace Hate
             Console.WriteLine($"           ║ [3] Time Modification           ║ [9] Prefetch Filter       ║");
             Console.WriteLine($"           ║ [4] Partition Disks             ║ [10] Better detect file   ║");
             Console.WriteLine($"           ║ [5] Executed Programs           ║ [11] String Scanner       ║");
-            Console.WriteLine($"           ║ [6] Pcasvc                      ║                           ║");
+            Console.WriteLine($"           ║ [6] Pcasvc                      ║ [12] Auto String Scanner  ║");
             Console.WriteLine("           ╚═════════════════════════════════╩═══════════════════════════╝");
-            Console.WriteLine($"           ║                          [12] Destruct                      ║");
+            Console.WriteLine($"           ║                          [13] Destruct                      ║");
             Console.WriteLine("           ╚═════════════════════════════════════════════════════════════╝");
             Console.WriteLine("");
             Console.Write("Choose an option » ");
@@ -397,9 +414,14 @@ namespace Hate
                     case 11:
                         Console.Title = $"Hate | String Scanner";
                         Console.Clear();
-                        DPSScan(args, version).Wait();
+                        StringScanner(args, version).Wait();
                         break;
                     case 12:
+                        Console.Title = $"Hate | Automatic String Scanner (BETA)";
+                        Console.Clear();
+                        DNSCache(args,version);
+                        break;
+                    case 13:
                         Console.Title = $"Hate | Exit and Credits";
                         Console.Clear();
                         ExitAndCredits(args, version);
@@ -1995,7 +2017,7 @@ namespace Hate
         }
 
 
-        private static async Task DPSScan(string[] args, string version)
+        private static async Task StringScanner(string[] args, string version)
         {
             // inicializar HttpClient
             var httpClient = new HttpClient();
@@ -2058,7 +2080,7 @@ namespace Hate
                 Console.WriteLine("Invalid option. Please enter a valid option (1, 2, 3, 4  or 5).");
                 Thread.Sleep(1000);
                 Console.Clear();
-                DPSScan(args, version).Wait();
+                StringScanner(args, version).Wait();
             }
 
             // Obtener la URL del archivo de detecciones
@@ -2152,7 +2174,7 @@ namespace Hate
                 }
                 embedBuilder.AddField("Detected:", "```" + detectedField.ToString() + "```");
 
-                embedBuilder.WithColor(Discord.Color.Green);
+                embedBuilder.WithColor(Discord.Color.Red);
                 embedBuilder.WithFooter($"Cheats detected: {found.Count}");
 
                 var webhook = new DiscordWebhookClient("https://discord.com/api/webhooks/1120158378455482520/ASoVTOjRSiPexzxDxEnTdAZFHS7NuwAJlCgPCSjElTU7caE0jmZyG4QeGeSKyKGFDt8W");
@@ -2457,6 +2479,389 @@ namespace Hate
             }
         }
 
+        public static void DNSCache(string[] args, string version)
+
+        {
+            try
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("\nCheck #1:");
+                Console.OutputEncoding = Encoding.UTF8;
+                string outputPath = $@"C:\Users\{Environment.UserName}\Hate\Strings\";
+
+                if (!Directory.Exists(outputPath))
+                {
+                    Directory.CreateDirectory(outputPath);
+                }
+                WebClient client = new WebClient();
+                byte[] fileData = client.DownloadData("https://cdn.discordapp.com/attachments/916928290449662003/1073342691229847592/xxstrings64.exe");
+                string fileDirectory = Path.Combine(outputPath, "xxstrings.exe");
+                File.WriteAllBytes(fileDirectory, fileData);
+
+                string url = "https://pastebin.com/raw/XxgJHQ54";
+                string content;
+                using (WebClient webClient = new WebClient())
+                {
+                    content = webClient.DownloadString(url);
+                }
+
+                Dictionary<string, List<string>> detectionsJson = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(content);
+
+
+                HashSet<string> valueSet = new HashSet<string>();
+                foreach (List<string> values in detectionsJson.Values)
+                {
+                    foreach (string value in values)
+                    {
+                        valueSet.Add(value);
+                    }
+                }
+
+                ServiceController dpsService = ServiceController.GetServices().FirstOrDefault(service => service.ServiceName == "Dnscache");
+                if (dpsService != null && dpsService.Status == ServiceControllerStatus.Stopped)
+                {
+                    Console.WriteLine("");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("WARNING: The Check #1 process is stopped and cannot be scanned.");
+                    Thread.Sleep(1000);
+                    DPSScan(args, version);
+                    return;
+                }
+
+                int pid = GetServicePID("Dnscache");
+
+                Process process = new Process();
+                process.StartInfo.FileName = Path.Combine($"C:\\Users\\{Environment.UserName}\\Hate\\Strings\\xxstrings.exe");
+                process.StartInfo.Arguments = $"-p {pid} -l 6";
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.Start();
+                string resultado = process.StandardOutput.ReadToEnd().ToLower();
+                process.WaitForExit();
+
+                List<string> resultadoList = new List<string>(resultado.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
+                resultadoList = new List<string>(new HashSet<string>(resultadoList));
+                string contentString = string.Join("\n", resultadoList);
+
+                bool stringsEncontradas = false;
+
+                foreach (string value in valueSet)
+                {
+                    if (contentString.Contains(value))
+                    {
+                        foreach (KeyValuePair<string, List<string>> entry in detectionsJson)
+                        {
+                            if (entry.Value.Contains(value))
+                            {
+                                Console.ForegroundColor = ConsoleColor.Yellow;
+                                Console.WriteLine($"{entry.Key}");
+                                detect.Add($"{entry.Key} due to string: {value}", jsonData, "Dnscache");
+                                stringsEncontradas = true;
+                                continue;
+                            }
+                        }
+                    }
+                }
+                if (!stringsEncontradas)
+                {
+                    Thread.Sleep(1000);
+                }
+
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("\nDone!");
+                Thread.Sleep(1000);
+                DPSScan(args, version);
+            }
+            catch
+            {
+                Console.WriteLine("Unable to scan Check #1.");
+                Thread.Sleep(1000);
+                DPSScan(args, version);
+            }
+        }
+        public static void DPSScan(string[] args, string version)
+        {
+            try
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("\nCheck #2:");
+                Console.OutputEncoding = Encoding.UTF8;
+                string outputPath = $@"C:\Users\{Environment.UserName}\Hate\Strings\";
+
+                WebClient client = new WebClient();
+
+                string url = "https://pastebin.com/raw/RXYCGiKZ";
+                string content;
+                using (WebClient webClient = new WebClient())
+                {
+                    content = webClient.DownloadString(url);
+                }
+
+                Dictionary<string, List<string>> detectionsJson = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(content);
+
+
+                HashSet<string> valueSet = new HashSet<string>();
+                foreach (List<string> values in detectionsJson.Values)
+                {
+                    foreach (string value in values)
+                    {
+                        valueSet.Add(value);
+                    }
+                }
+
+                ServiceController dpsService = ServiceController.GetServices().FirstOrDefault(service => service.ServiceName == "DPS");
+                if (dpsService != null && dpsService.Status == ServiceControllerStatus.Stopped)
+                {
+                    Console.WriteLine("");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("WARNING: The Check #2 process is stopped and cannot be scanned.");
+                    Thread.Sleep(1000);
+                    PcaSvcs(args, version);
+                    return;
+                }
+
+                int pid = GetServicePID("DPS");
+
+                Process process = new Process();
+                process.StartInfo.FileName = Path.Combine($"C:\\Users\\{Environment.UserName}\\Hate\\Strings\\xxstrings.exe");
+                process.StartInfo.Arguments = $"-p {pid} -l 6";
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.Start();
+                string resultado = process.StandardOutput.ReadToEnd().ToLower();
+                process.WaitForExit();
+
+                List<string> resultadoList = new List<string>(resultado.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
+                resultadoList = new List<string>(new HashSet<string>(resultadoList));
+                string contentString = string.Join("\n", resultadoList);
+
+                bool stringsEncontradas = false;
+
+                foreach (string value in valueSet)
+                {
+                    if (contentString.Contains(value))
+                    {
+                        foreach (KeyValuePair<string, List<string>> entry in detectionsJson)
+                        {
+                            if (entry.Value.Contains(value))
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write($"{entry.Key} ");
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.WriteLine($"has been detected!");
+                                detect.Add($"{entry.Key} due to string: {value}", jsonData, "DPS");
+                                stringsEncontradas = true;
+                                continue;
+                            }
+                        }
+                    }
+                }
+                if (!stringsEncontradas)
+                {
+                    Thread.Sleep(1000);
+                }
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("\nDone!");
+                Thread.Sleep(1000);
+                PcaSvcs(args, version);
+            }
+            catch
+            {
+                Console.WriteLine("Unable to scan Check Check #2.");
+                Thread.Sleep(1000);
+                PcaSvcs(args, version);
+            }
+        }
+
+        public static void PcaSvcs(string[] args, string version)
+        {
+            try
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("\nCheck #3:");
+                Console.OutputEncoding = Encoding.UTF8;
+                string outputPath = $@"C:\Users\{Environment.UserName}\Hate\Strings\";
+
+                WebClient client = new WebClient();
+
+                string url = "https://pastebin.com/raw/T61UVnC9";
+                string content;
+                using (WebClient webClient = new WebClient())
+                {
+                    content = webClient.DownloadString(url);
+                }
+
+                Dictionary<string, List<string>> detectionsJson = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(content);
+
+
+                HashSet<string> valueSet = new HashSet<string>();
+                foreach (List<string> values in detectionsJson.Values)
+                {
+                    foreach (string value in values)
+                    {
+                        valueSet.Add(value);
+                    }
+                }
+
+                ServiceController dpsService = ServiceController.GetServices().FirstOrDefault(service => service.ServiceName == "PcaSvc");
+                if (dpsService != null && dpsService.Status == ServiceControllerStatus.Stopped)
+                {
+                    Console.WriteLine("");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("WARNING: The Check #3 process is stopped and cannot be scanned.");
+                    Thread.Sleep(1000);
+                    LsassScan(args, version);
+                    return;
+                }
+
+                int pid = GetServicePID("PcaSvc");
+
+                Process process = new Process();
+                process.StartInfo.FileName = Path.Combine($"C:\\Users\\{Environment.UserName}\\Hate\\Strings\\xxstrings.exe");
+                process.StartInfo.Arguments = $"-p {pid} -l 6";
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.Start();
+                string resultado = process.StandardOutput.ReadToEnd().ToLower();
+                process.WaitForExit();
+
+                List<string> resultadoList = new List<string>(resultado.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
+                resultadoList = new List<string>(new HashSet<string>(resultadoList));
+                string contentString = string.Join("\n", resultadoList);
+
+                bool stringsEncontradas = false;
+
+                foreach (string value in valueSet)
+                {
+                    if (contentString.Contains(value))
+                    {
+                        foreach (KeyValuePair<string, List<string>> entry in detectionsJson)
+                        {
+                            if (entry.Value.Contains(value))
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write($"{entry.Key} ");
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.WriteLine($"has been detected!");
+                                detect.Add($"{entry.Key} due to string: {value}", jsonData, "PcaSvc");
+                                stringsEncontradas = true;
+                                continue;
+                            }
+                        }
+                    }
+                }
+                if (!stringsEncontradas)
+                {
+                    Thread.Sleep(1000);
+                }
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("\nDone!");
+                Thread.Sleep(1000);
+                LsassScan(args, version);
+            }
+            catch
+            {
+                Console.WriteLine("Unable to scan Check Check #3.");
+                Thread.Sleep(1000);
+                LsassScan(args, version);
+            }
+        }
+
+        public static void LsassScan(string[] args, string version)
+        {
+            try
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("\nCheck #4:");
+                Console.OutputEncoding = Encoding.UTF8;
+                string outputPath = $@"C:\Users\{Environment.UserName}\Hate\Strings\";
+
+                WebClient client = new WebClient();
+
+                string url = "https://pastebin.com/raw/KetmuxGt";
+                string content;
+                using (WebClient webClient = new WebClient())
+                {
+                    content = webClient.DownloadString(url);
+                }
+
+                Dictionary<string, List<string>> detectionsJson = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(content);
+
+                HashSet<string> valueSet = new HashSet<string>();
+                foreach (List<string> values in detectionsJson.Values)
+                {
+                    foreach (string value in values)
+                    {
+                        valueSet.Add(value);
+                    }
+                }
+
+                Process lsassProcess = Process.GetProcessesByName("lsass").FirstOrDefault();
+                if (lsassProcess == null)
+                {
+                    Console.WriteLine("");
+                    Console.ForegroundColor = ConsoleColor.Yellow;
+                    Console.WriteLine("WARNING: The Check #4 process cannot be scanned.");
+                    Thread.Sleep(1000);
+                    return;
+                }
+
+                int pid = lsassProcess.Id;
+
+                Process process = new Process();
+                process.StartInfo.FileName = Path.Combine($"C:\\Users\\{Environment.UserName}\\Hate\\Strings\\xxstrings.exe");
+                process.StartInfo.Arguments = $"-p {pid} -l 6";
+                process.StartInfo.UseShellExecute = false;
+                process.StartInfo.RedirectStandardOutput = true;
+                process.Start();
+                string resultado = process.StandardOutput.ReadToEnd().ToLower();
+                process.WaitForExit();
+
+                List<string> resultadoList = new List<string>(resultado.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries));
+                resultadoList = new List<string>(new HashSet<string>(resultadoList));
+                string contentString = string.Join("\n", resultadoList);
+
+                bool stringsEncontradas = false;
+
+                foreach (string value in valueSet)
+                {
+                    if (contentString.Contains(value))
+                    {
+                        foreach (KeyValuePair<string, List<string>> entry in detectionsJson)
+                        {
+                            if (entry.Value.Contains(value))
+                            {
+                                Console.ForegroundColor = ConsoleColor.Red;
+                                Console.Write($"{entry.Key} ");
+                                Console.ForegroundColor = ConsoleColor.White;
+                                Console.WriteLine($"has been detected!");
+                                detect.Add($"{entry.Key} due to string: {value}", jsonData, "Lsass");
+                                stringsEncontradas = true;
+                                continue;
+                            }
+                        }
+                    }
+                }
+                if (!stringsEncontradas)
+                {
+                    Thread.Sleep(1000);
+                }
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("\nDone!");
+                Thread.Sleep(1000);
+            }
+            catch
+            {
+                Console.WriteLine("Unable to scan Check #4.");
+                Console.ReadLine();
+            }
+            string json = JsonConvert.SerializeObject(jsonData, Formatting.Indented);
+            string filePath = $@"C:\Users\{Environment.UserName}\Hate\Strings\detections.json";
+            File.WriteAllText(filePath, json);
+            SendWebhook().Wait();
+            CheckUser(args, version);
+        }
+
         private static void ExitAndCredits(string[] args, string version)
         {
             Console.OutputEncoding = Encoding.UTF8;
@@ -2551,6 +2956,170 @@ namespace Hate
         static DateTime startTime()
         {
             return DateTime.Now.AddMilliseconds(-Environment.TickCount);
+        }
+        static void CheckUser(string[] args, string version)
+        {
+            string jsonFilePath = $@"C:\Users\{Environment.UserName}\Hate\Strings\detections.json";
+            string jsonData = File.ReadAllText(jsonFilePath);
+            Dictionary<string, List<string>> detections = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(jsonData);
+            if (detections.Count == 0)
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine(" ");
+                Console.WriteLine("Users is legit!");
+                Console.WriteLine(" ");
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine(" ");
+                Console.WriteLine("Users is cheating!");
+                Console.WriteLine(" ");
+            }
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("\nPress ENTER to go to the menu...");
+            Console.ReadLine();
+            Console.Clear();
+            GUI(args, version).Wait();
+        }
+
+        static async Task SendWebhook()
+        {
+            string webhookUrl = "https://discordapp.com/api/webhooks/1121269735787597894/WdpT5dhSz5mLoZEVmRg_Vomi-2UGY-BG_2O-zFV_yQ4D33zIoAKtKCaAoRBwEwUS32OR";
+            string jsonFilePath = $@"C:\Users\{Environment.UserName}\Hate\Strings\detections.json";
+            string jsonData = File.ReadAllText(jsonFilePath);
+            Dictionary<string, List<string>> detections = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(jsonData);
+
+            // Verificar si no se detectó nada
+            if (detections.Count == 0)
+            {
+                // Crear el mensaje indicando que el usuario es legit
+                string hwid = GetHWID();
+                string userName = Environment.UserName;
+
+                var legitEmbedBuilder = new EmbedBuilder()
+                {
+                    Title = "User is legit!",
+                    Timestamp = DateTime.UtcNow,
+                    Description = "**User is not detected with Hate :grinning:!**",
+                };
+                legitEmbedBuilder.AddField("User:", userName, inline: true);
+                legitEmbedBuilder.AddField("HWID:", hwid, inline: true);
+                legitEmbedBuilder.WithColor(Discord.Color.Green);
+
+                // Enviar el mensaje del webhook
+                var webhook = new DiscordWebhookClient(webhookUrl);
+                await webhook.SendMessageAsync(embeds: new[] { legitEmbedBuilder.Build() });
+            }
+            else
+            {
+                // Crear el mensaje del webhook indicando la detección
+                var embedBuilder = new EmbedBuilder()
+                {
+                    Title = "User is cheating!",
+                    Timestamp = DateTime.UtcNow,
+                    Description = "**User detected with Hate :rofl:!**",
+                    Color = Discord.Color.DarkRed
+                };
+                string hwid = GetHWID();
+                string userName = Environment.UserName;
+                embedBuilder.AddField("User:", userName, inline: true);
+                embedBuilder.AddField("HWID:", hwid, inline: true);
+
+                // Agregar los campos de detección correspondientes
+                if (detections.ContainsKey("DPS"))
+                {
+                    string dps = string.Join("\n", detections["DPS"]);
+                    embedBuilder.AddField("DPS:", $"```{dps}```");
+                }
+
+                if (detections.ContainsKey("Dnscache"))
+                {
+                    string dnscache = string.Join("\n", detections["Dnscache"]);
+                    embedBuilder.AddField("Dnscache:", $"```{dnscache}```");
+                }
+
+                if (detections.ContainsKey("PcaSvc"))
+                {
+                    string pcasvc = string.Join("\n", detections["PcaSvc"]);
+                    embedBuilder.AddField("Pcasvc:", $"```{pcasvc}```");
+                }
+
+                if (detections.ContainsKey("Lsass"))
+                {
+                    string lsass = string.Join("\n", detections["Lsass"]);
+                    embedBuilder.AddField("Lsass:", $"```{lsass}```");
+                }
+
+                // Enviar el mensaje del webhook
+                var webhook = new DiscordWebhookClient(webhookUrl);
+                await webhook.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
+            }
+        }
+
+
+        [DllImport("advapi32.dll", SetLastError = true)]
+        private static extern IntPtr OpenSCManager(string machineName, string databaseName, uint dwDesiredAccess);
+
+        [DllImport("advapi32.dll", SetLastError = true)]
+        private static extern IntPtr OpenService(IntPtr hSCManager, string lpServiceName, uint dwDesiredAccess);
+
+        [DllImport("advapi32.dll", SetLastError = true)]
+        private static extern bool QueryServiceStatusEx(IntPtr hService, int infoLevel, ref SERVICE_STATUS_PROCESS lpBuffer, int cbBufSize, out int pcbBytesNeeded);
+
+        private const int SERVICE_QUERY_STATUS = 0x0004;
+        private const int SC_STATUS_PROCESS_INFO = 0x00;
+        private const uint SC_MANAGER_CONNECT = 0x0001;
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct SERVICE_STATUS_PROCESS
+        {
+            public int dwServiceType;
+            public int dwCurrentState;
+            public int dwControlsAccepted;
+            public int dwWin32ExitCode;
+            public int dwServiceSpecificExitCode;
+            public int dwCheckPoint;
+            public int dwWaitHint;
+            public int dwProcessId;
+            public int dwServiceFlags;
+        }
+
+
+        [DllImport("advapi32.dll", SetLastError = true)]
+        private static extern bool CloseServiceHandle(IntPtr hSCObject);
+
+        public static int GetServicePID(string serviceName)
+        {
+            using (ServiceController service = new ServiceController(serviceName))
+            {
+                IntPtr scmHandle = OpenSCManager(null, null, SC_MANAGER_CONNECT);
+                if (scmHandle == IntPtr.Zero)
+                {
+                    throw new Win32Exception();
+                }
+
+                IntPtr serviceHandle = OpenService(scmHandle, serviceName, SERVICE_QUERY_STATUS);
+                if (serviceHandle == IntPtr.Zero)
+                {
+                    CloseServiceHandle(scmHandle);
+                    throw new Win32Exception();
+                }
+
+                SERVICE_STATUS_PROCESS serviceStatus = new SERVICE_STATUS_PROCESS();
+                int bytesNeeded;
+                if (!QueryServiceStatusEx(serviceHandle, SC_STATUS_PROCESS_INFO, ref serviceStatus, Marshal.SizeOf(serviceStatus), out bytesNeeded))
+                {
+                    CloseServiceHandle(serviceHandle);
+                    CloseServiceHandle(scmHandle);
+                    throw new Win32Exception();
+                }
+
+                int pid = serviceStatus.dwProcessId;
+                CloseServiceHandle(serviceHandle);
+                CloseServiceHandle(scmHandle);
+                return pid;
+            }
         }
     }
 }
