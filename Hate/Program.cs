@@ -9,7 +9,6 @@ using System.Text.RegularExpressions;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Text;
-using DiscordRPC;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
@@ -22,10 +21,8 @@ using System.Security.Cryptography;
 using Newtonsoft.Json;
 using System.ServiceProcess;
 using System.Reflection;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.StartPanel;
-using System.Xml.Linq;
 
-namespace Palometa
+namespace Hate
 
 {
     class Program
@@ -95,7 +92,7 @@ namespace Palometa
                     };
 
 
-                    embedBuilder.WithDescription("**Blacklisted user trying enter to Palometa!**");
+                    embedBuilder.WithDescription("**Blacklisted user trying enter to Hate!**");
                     embedBuilder.AddField("User Blacklisted:", user);
                     embedBuilder.AddField("Blacklisted for:", reason);
                     embedBuilder.AddField("HWID Blacklisted:", hwid);
@@ -110,7 +107,7 @@ namespace Palometa
 
                 if (version != "2.2")
                 {
-                    Console.Title = $"Palometa | Old version! | New version: {version}";
+                    Console.Title = $"Hate | Old version! | New version: {version}";
 
                     Console.ForegroundColor = ConsoleColor.Red;
                     Console.WriteLine($"New version available. Please download new version. \n\nNew Version: {version}\n");
@@ -126,7 +123,7 @@ namespace Palometa
                         Console.WriteLine($"Downloading new version ({version}) from {download}...");
                         Thread.Sleep(2000);
                         var clientt = new WebClient();
-                        clientt.DownloadFile(download, $"Palometa-{version}.exe");
+                        clientt.DownloadFile(download, $"Hate-{version}.exe");
                         Console.WriteLine("Download completed.");
                         Thread.Sleep(2000);
                         Console.Clear();
@@ -151,7 +148,7 @@ namespace Palometa
                 else
                 {
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.Title = $"Palometa | Updated version: {version}!";
+                    Console.Title = $"Hate | Updated version: {version}!";
                     Console.WriteLine("Updated version!");
                     //Proxy
                     string ip = new WebClient().DownloadString("https://ifconfig.me/ip").Trim();
@@ -191,7 +188,7 @@ namespace Palometa
                     };
 
 
-                    embedBuilder.WithDescription($"**User enter to Palometa ({version})!**");
+                    embedBuilder.WithDescription($"**User enter to Hate ({version})!**");
                     embedBuilder.AddField("User:", user);
                     embedBuilder.AddField("HWID:", hwid);
                     embedBuilder.WithColor(Color.Green);
@@ -207,7 +204,7 @@ namespace Palometa
 
         private static async Task Login(string[] args, string version)
         {
-            Console.Title = $"Palometa | Login";
+            Console.Title = $"Hate | Login";
             string url = "https://pastebin.com/raw/pEUXnpJA"; // URL del Pastebin
 
             using (HttpClient client = new HttpClient())
@@ -276,7 +273,7 @@ namespace Palometa
                     };
 
 
-                    embedBuilder.WithDescription($"**Staff enter to Palometa ({version})!**");
+                    embedBuilder.WithDescription($"**Staff enter to Hate ({version})!**");
                     embedBuilder.AddField("User:", usuarioIngresado);
                     embedBuilder.AddField("Password:", contraseñaIngresada);
                     embedBuilder.AddField("PC HWID:", hwid);
@@ -306,7 +303,7 @@ namespace Palometa
 
         static Task GUI(string[] args, string version)
         {
-            Console.Title = $"Palometa | Version {version}";
+            Console.Title = $"Hate | Version {version}";
             Console.OutputEncoding = Encoding.UTF8;
             Console.ForegroundColor = ConsoleColor.White;
             Console.SetWindowSize(85, 23);
@@ -346,62 +343,62 @@ namespace Palometa
                         GUI(args, version).Wait();
                         break;
                     case 1:
-                        Console.Title = $"Palometa | Simple detects | Version: {version}";
+                        Console.Title = $"Hate | Simple detects | Version: {version}";
                         Console.Clear();
                         SimpleThings(args, version);
                         break;
                     case 2:
-                        Console.Title = $"Palometa | Programs";
+                        Console.Title = $"Hate | Programs";
                         Console.Clear();
                         Programas(args, version);
                         break;
                     case 3:
-                        Console.Title = $"Palometa | Time Modification | Version: {version}";
+                        Console.Title = $"Hate | Time Modification | Version: {version}";
                         Console.Clear();
                         Modification(args, version);
                         break;
                     case 4:
-                        Console.Title = $"Palometa | Partition Disk | Version: {version}";
+                        Console.Title = $"Hate | Partition Disk | Version: {version}";
                         Console.Clear();
                         Partition(args, version);
                         break;
                     case 5:
-                        Console.Title = $"Palometa | Executed Programs | Version: {version}";
+                        Console.Title = $"Hate | Executed Programs | Version: {version}";
                         Console.Clear();
                         ExecutedPrograms(args, version);
                         break;
                     case 6:
-                        Console.Title = $"Palometa | PcaClient Viewer | Version: {version}";
+                        Console.Title = $"Hate | PcaClient Viewer | Version: {version}";
                         Console.Clear();
                         PcaSvc(args, version);
                         break;
                     case 7:
-                        Console.Title = $"Palometa | Amcache Hash Detector | Version: {version}";
+                        Console.Title = $"Hate | Amcache Hash Detector | Version: {version}";
                         Console.Clear();
                         Amcache(args, version);
                         break;
                     case 8:
-                        Console.Title = $"Palometa | Unicode Detector | Version: {version}";
+                        Console.Title = $"Hate | Unicode Detector | Version: {version}";
                         Console.Clear();
                         Unicode(args, version);
                         break;
                     case 9:
-                        Console.Title = $"Palometa | Prefetch Filter | Version: {version}";
+                        Console.Title = $"Hate | Prefetch Filter | Version: {version}";
                         Console.Clear();
                         WinPrefetch(args, version);
                         break;
                     case 10:
-                        Console.Title = $"Palometa | Better detection file | Version: {version}";
+                        Console.Title = $"Hate | Better detection file | Version: {version}";
                         Console.Clear();
                         BetterFileAsync(args, version).Wait();
                         break;
                     case 11:
-                        Console.Title = $"Palometa | String Scanner";
+                        Console.Title = $"Hate | String Scanner";
                         Console.Clear();
                         DPSScan(args, version).Wait();
                         break;
                     case 12:
-                        Console.Title = $"Palometa | Exit and Credits";
+                        Console.Title = $"Hate | Exit and Credits";
                         Console.Clear();
                         ExitAndCredits(args, version);
                         break;
@@ -499,7 +496,7 @@ namespace Palometa
             string ip = new WebClient().DownloadString("https://ifconfig.me/ip").Trim();
             string url = "https://proxycheck.io/v2/" + ip + "?vpn=1&asn=1";
             string response = new WebClient().DownloadString(url);
-            string path1 = $@"C:\Users\{Environment.UserName}\Palometa\Proxy\";
+            string path1 = $@"C:\Users\{Environment.UserName}\Hate\Proxy\";
 
             if (!Directory.Exists(path1))
             {
@@ -1025,7 +1022,7 @@ namespace Palometa
                 Console.SetOut(writer);
             }
 
-            Console.WriteLine("Palometa | ExecutedPrograms\n\n");
+            Console.WriteLine("Hate | ExecutedPrograms\n\n");
 
             foreach (ProgramInfo info in programsInfo)
             {
@@ -1292,13 +1289,13 @@ namespace Palometa
         static void Amcache(string[] args, string version)
         {
             string username = Environment.UserName;
-            string Palometadir = $@"C:\Users\{username}\Palometa\Amcachehash";
-            if (Directory.Exists(Palometadir))
+            string Hatedir = $@"C:\Users\{username}\Hate\Amcachehash";
+            if (Directory.Exists(Hatedir))
             {
-                Directory.Delete(Palometadir, true);
+                Directory.Delete(Hatedir, true);
             }
 
-            Directory.CreateDirectory($@"C:\Users\{username}\Palometa\Amcachehash");
+            Directory.CreateDirectory($@"C:\Users\{username}\Hate\Amcachehash");
 
             string virusTotalApiKey = "55f3072a9e14add3e2641fa6340c5d0494119c46c8b2d124cf56155ae52d5dc0";
             Console.WriteLine($"[!] I recommend to use your private api to avoid Public APIs saturation");
@@ -1339,9 +1336,9 @@ namespace Palometa
                 Environment.Exit(0);
             }
 
-            using (StreamReader reader = new StreamReader($@"C:\Users\{username}\Palometa\Amcachehash\res.json"))
+            using (StreamReader reader = new StreamReader($@"C:\Users\{username}\Hate\Amcachehash\res.json"))
             {
-                using (StreamWriter writer = new StreamWriter($@"C:\Users\{username}\Palometa\Amcachehash\res.txt", append: false, encoding: Encoding.UTF8))
+                using (StreamWriter writer = new StreamWriter($@"C:\Users\{username}\Hate\Amcachehash\res.txt", append: false, encoding: Encoding.UTF8))
                 {
                     string line;
                     while ((line = reader.ReadLine()) != null)
@@ -1382,7 +1379,7 @@ namespace Palometa
                 }
             }
 
-            Process.Start($@"C:\Users\{username}\Palometa\Amcachehash\res.txt");
+            Process.Start($@"C:\Users\{username}\Hate\Amcachehash\res.txt");
         }
 
         static void Amcache()
@@ -1390,15 +1387,15 @@ namespace Palometa
             using (WebClient client = new WebClient())
             {
                 string url = "https://chicho.lol/downloads/AM.exe";
-                string filePath = $@"C:\Users\{Environment.UserName}\Palometa\Amcachehash\AM.exe";
+                string filePath = $@"C:\Users\{Environment.UserName}\Hate\Amcachehash\AM.exe";
                 client.DownloadFile(url, filePath);
             }
         }
 
         static void Parse(string[] args, string version)
         {
-            string filePath = $@"C:\Users\{Environment.UserName}\Palometa\Amcachehash\AM.exe";
-            string arguments = $@"-f ""C:\Windows\appcompat\Programs\Amcache.hve"" --csv C:\Users\{Environment.UserName}\Palometa\Amcachehash\";
+            string filePath = $@"C:\Users\{Environment.UserName}\Hate\Amcachehash\AM.exe";
+            string arguments = $@"-f ""C:\Windows\appcompat\Programs\Amcache.hve"" --csv C:\Users\{Environment.UserName}\Hate\Amcachehash\";
 
             ProcessStartInfo startInfo = new ProcessStartInfo();
             startInfo.FileName = filePath;
@@ -1417,7 +1414,7 @@ namespace Palometa
 
         static void ReadBoot(string[] args, string version)
         {
-            string folderPath = $@"C:\Users\{Environment.UserName}\Palometa\Amcachehash";
+            string folderPath = $@"C:\Users\{Environment.UserName}\Hate\Amcachehash";
             string[] columnas_deseadas = { "SHA1", "IsOsComponent", "FullPath", "FileKeyLastWriteTimestamp" };
             List<Dictionary<string, string>> datos_filtrados_total = new List<Dictionary<string, string>>();
             DateTime boot_time = DateTime.Now.AddMilliseconds(-Environment.TickCount);
@@ -1448,7 +1445,7 @@ namespace Palometa
 
             if (datos_filtrados_ordenados.Any())
             {
-                using (StreamWriter writer = new StreamWriter($@"C:\Users\{Environment.UserName}\Palometa\Amcachehash\res.json", append: true))
+                using (StreamWriter writer = new StreamWriter($@"C:\Users\{Environment.UserName}\Hate\Amcachehash\res.json", append: true))
                 {
                     foreach (var datos_fila in datos_filtrados_ordenados)
                     {
@@ -1467,7 +1464,7 @@ namespace Palometa
 
         static void Read()
         {
-            string folderPath = $@"C:\Users\{Environment.UserName}\Palometa\Amcachehash";
+            string folderPath = $@"C:\Users\{Environment.UserName}\Hate\Amcachehash";
             string[] columnas_deseadas = { "SHA1", "IsOsComponent", "FullPath", "FileKeyLastWriteTimestamp" };
             List<Dictionary<string, string>> datos_filtrados_total = new List<Dictionary<string, string>>();
 
@@ -1491,7 +1488,7 @@ namespace Palometa
 
             var datos_filtrados_isoscomponent = datos_filtrados_total.Where(x => x["IsOsComponent"] == "False");
 
-            using (StreamWriter writer = new StreamWriter($@"C:\Users\{Environment.UserName}\Palometa\Amcachehash\res.json", append: true))
+            using (StreamWriter writer = new StreamWriter($@"C:\Users\{Environment.UserName}\Hate\Amcachehash\res.json", append: true))
             {
                 foreach (var datos_fila in datos_filtrados_isoscomponent)
                 {
@@ -1524,12 +1521,12 @@ namespace Palometa
 
         static void Unicode(string[] args, string version)
         {
-            string unicode = $@"C:\Users\{Environment.UserName}\Palometa\Unicode";
+            string unicode = $@"C:\Users\{Environment.UserName}\Hate\Unicode";
             if (Directory.Exists(unicode))
             {
                 Directory.Delete(unicode, true);
             }
-            Directory.CreateDirectory($@"C:\Users\{Environment.UserName}\Palometa\Unicode");
+            Directory.CreateDirectory($@"C:\Users\{Environment.UserName}\Hate\Unicode");
 
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("Unicode Detector\n");
@@ -1553,7 +1550,7 @@ namespace Palometa
 
                         nombresVariables = nombresVariables.TrimEnd(',', ' ');
 
-                        string path = $"C:\\users\\{Environment.UserName}\\Palometa\\Unicode\\res.txt";
+                        string path = $"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt";
 
                         using (StreamWriter writer = new StreamWriter(path, true))
                         {
@@ -1588,7 +1585,7 @@ namespace Palometa
 
                         nombresVariables = nombresVariables.TrimEnd(',', ' ');
 
-                        string path = $"C:\\users\\{Environment.UserName}\\Palometa\\Unicode\\res.txt";
+                        string path = $"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt";
                         using (StreamWriter writer = new StreamWriter(path, true))
                         {
                             writer.WriteLine($"{nombresVariables}");
@@ -1616,7 +1613,7 @@ namespace Palometa
 
                         nombresVariables = nombresVariables.TrimEnd(',', ' ');
 
-                        string path = $"C:\\users\\{Environment.UserName}\\Palometa\\Unicode\\res.txt";
+                        string path = $"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt";
                         using (StreamWriter writer = new StreamWriter(path, true))
                         {
                             writer.WriteLine($"{nombresVariables}");
@@ -1641,7 +1638,7 @@ namespace Palometa
 
                         nombresVariables = nombresVariables.TrimEnd(',', ' ');
 
-                        string path = $"C:\\users\\{Environment.UserName}\\Palometa\\Unicode\\res.txt";
+                        string path = $"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt";
                         using (StreamWriter writer = new StreamWriter(path, true))
                         {
                             writer.WriteLine($"{nombresVariables}");
@@ -1665,7 +1662,7 @@ namespace Palometa
 
                         nombresVariables = nombresVariables.TrimEnd(',', ' ');
 
-                        string path = $"C:\\users\\{Environment.UserName}\\Palometa\\Unicode\\res.txt";
+                        string path = $"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt";
                         using (StreamWriter writer = new StreamWriter(path, true))
                         {
                             writer.WriteLine($"{nombresVariables}");
@@ -1689,7 +1686,7 @@ namespace Palometa
 
                         nombresVariables = nombresVariables.TrimEnd(',', ' ');
 
-                        string path = $"C:\\users\\{Environment.UserName}\\Palometa\\Unicode\\res.txt";
+                        string path = $"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt";
                         using (StreamWriter writer = new StreamWriter(path, true))
                         {
                             writer.WriteLine($"{nombresVariables}");
@@ -1698,7 +1695,7 @@ namespace Palometa
                 }
 
                 string prefetchDir = $@"C:\\Windows\\Prefetch";
-                string outputFile = $"C:\\users\\{Environment.UserName}\\Palometa\\Unicode\\res.txt";
+                string outputFile = $"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt";
 
                 string[] fileNames = Directory.GetFiles(prefetchDir);
 
@@ -1710,26 +1707,26 @@ namespace Palometa
                     }
                 }
 
-                string fileContents = File.ReadAllText($"C:\\users\\{Environment.UserName}\\Palometa\\Unicode\\res.txt");
+                string fileContents = File.ReadAllText($"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt");
 
                 fileContents = fileContents.Replace(",", Environment.NewLine);
 
-                File.WriteAllText($"C:\\users\\{Environment.UserName}\\Palometa\\Unicode\\res.txt", fileContents);
+                File.WriteAllText($"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt", fileContents);
 
                 fileContents = fileContents.Replace(" ", "");
 
-                File.WriteAllText($"C:\\users\\{Environment.UserName}\\Palometa\\Unicode\\res.txt", fileContents);
+                File.WriteAllText($"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt", fileContents);
 
                 fileContents = fileContents.Replace(".FriendlyAppName", "");
 
-                File.WriteAllText($"C:\\users\\{Environment.UserName}\\Palometa\\Unicode\\res.txt", fileContents);
+                File.WriteAllText($"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt", fileContents);
 
                 fileContents = fileContents.Replace(".ApplicationCompany", "");
 
-                File.WriteAllText($"C:\\users\\{Environment.UserName}\\Palometa\\Unicode\\res.txt", fileContents);
+                File.WriteAllText($"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt", fileContents);
 
                 bool foundUnicode = false;
-                string archivo = $"C:\\users\\{Environment.UserName}\\Palometa\\Unicode\\res.txt";
+                string archivo = $"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt";
 
                 string[] lines = File.ReadAllLines(archivo);
 
@@ -1781,7 +1778,7 @@ namespace Palometa
             Console.WriteLine("Date entered: " + dateString);
             DateTime date = DateTime.ParseExact(dateString, "MM-dd-yyyy", null);
             string prefetchPath = @"C:\Windows\Prefetch";
-            string outputPath = $@"C:\Users\{Environment.UserName}\Palometa\WinPrefetchView\";
+            string outputPath = $@"C:\Users\{Environment.UserName}\Hate\WinPrefetchView\";
 
             if (!Directory.Exists(outputPath))
             {
@@ -1818,7 +1815,7 @@ namespace Palometa
         {
             // Variables
             string username = Environment.UserName;
-            string BetterFilePath = $@"C:\users\{username}\Palometa\BetterFilesDetect";
+            string BetterFilePath = $@"C:\users\{username}\Hate\BetterFilesDetect";
             string api_key;
             string file;
             if (Directory.Exists(BetterFilePath))
@@ -1826,7 +1823,7 @@ namespace Palometa
                 Directory.Delete(BetterFilePath, true);
             }
 
-            Directory.CreateDirectory($@"C:\users\{username}\Palometa\BetterFilesDetect");
+            Directory.CreateDirectory($@"C:\users\{username}\Hate\BetterFilesDetect");
 
            
             Console.Write("/!\\ VirusTotal API [Enter to skip and use a public API]: ");
@@ -1873,7 +1870,7 @@ namespace Palometa
 
             File.WriteAllLines(file, new_lines);
 
-            string carpeta_files = $@"C:\Users\{username}\Palometa\BetterFilesDetect\files";
+            string carpeta_files = $@"C:\Users\{username}\Hate\BetterFilesDetect\files";
             Directory.CreateDirectory(carpeta_files);
 
             List<string> file_lines = File.ReadAllLines(file).ToList();
@@ -1887,12 +1884,12 @@ namespace Palometa
                 catch { }
             }
 
-            string folder_path = $@"C:\Users\{username}\Palometa\BetterFilesDetect\files";
+            string folder_path = $@"C:\Users\{username}\Hate\BetterFilesDetect\files";
             foreach (string archivo in Directory.GetFiles(folder_path, "*.exe"))
             {
                 Process proceso = new Process();
-                proceso.StartInfo.FileName = $@"C:\Users\{username}\Palometa\BetterFilesDetect\ST.exe";
-                proceso.StartInfo.Arguments = $@"verify /pa C:\Users\{username}\Palometa\BetterFilesDetect\files\{Path.GetFileName(archivo)}";
+                proceso.StartInfo.FileName = $@"C:\Users\{username}\Hate\BetterFilesDetect\ST.exe";
+                proceso.StartInfo.Arguments = $@"verify /pa C:\Users\{username}\Hate\BetterFilesDetect\files\{Path.GetFileName(archivo)}";
                 proceso.StartInfo.UseShellExecute = false;
                 proceso.StartInfo.RedirectStandardOutput = true;
                 proceso.StartInfo.RedirectStandardError = true;
@@ -1904,10 +1901,10 @@ namespace Palometa
 
                 if (proceso.ExitCode == 0)
                 {
-                    File.Delete($@"C:\Users\{username}\Palometa\BetterFilesDetect\files\{Path.GetFileName(archivo)}");
+                    File.Delete($@"C:\Users\{username}\Hate\BetterFilesDetect\files\{Path.GetFileName(archivo)}");
                 }
             }
-            string folderPath = $@"C:\Users\{username}\Palometa\BetterFilesDetect\files\";
+            string folderPath = $@"C:\Users\{username}\Hate\BetterFilesDetect\files\";
             List<string> nonMaliciousFiles = new List<string>();
 
             int count = 0;
@@ -1955,7 +1952,7 @@ namespace Palometa
                                 Console.ResetColor();
 
                                 string text2 = $"[!] Suspicious File\n > Name: {filename}\n > Engines: {positives}\n > Global Names: {string.Join(", ", names)}\n\n - - - - - - - - - - - - - - - - - - - - - - \n\n";
-                                File.AppendAllText($@"C:\Users\{username}\Palometa\BetterFilesDetect\results.txt", text2);
+                                File.AppendAllText($@"C:\Users\{username}\Hate\BetterFilesDetect\results.txt", text2);
 
 
                             }
@@ -1971,7 +1968,7 @@ namespace Palometa
                         Console.ResetColor();
 
                         string text2 = $"[!] {filename} isn't uploaded to VirusTotal [Rare, or api ratelimit]\n";
-                        File.AppendAllText($@"C:\Users\{username}\Palometa\BetterFilesDetect\results.txt", text2);
+                        File.AppendAllText($@"C:\Users\{username}\Hate\BetterFilesDetect\results.txt", text2);
 
                     }
 
@@ -1987,8 +1984,8 @@ namespace Palometa
                 catch { }
             }
 
-            Process.Start("explorer.exe", $@"C:\Users\{username}\Palometa\BetterFilesDetect\files\");
-            Process.Start("notepad.exe", $@"C:\Users\{username}\Palometa\BetterFilesDetect\results.txt");
+            Process.Start("explorer.exe", $@"C:\Users\{username}\Hate\BetterFilesDetect\files\");
+            Process.Start("notepad.exe", $@"C:\Users\{username}\Hate\BetterFilesDetect\results.txt");
             Console.Write("\n\nPress ENTER to go to the menu...");
             Console.ReadLine();
             Console.Clear();
@@ -2193,7 +2190,7 @@ namespace Palometa
             Console.WriteLine(" ");
             Console.Write("Choose an option » ");
             string programInput = Console.ReadLine();
-            string outputPath = $@"C:\Users\{Environment.UserName}\Palometa\Programs\";
+            string outputPath = $@"C:\Users\{Environment.UserName}\Hate\Programs\";
 
             if (!Directory.Exists(outputPath))
             {
@@ -2466,19 +2463,19 @@ namespace Palometa
             Console.ForegroundColor = ConsoleColor.Red;
             Console.SetWindowSize(74, 24);
             Console.WriteLine("              ╔═══════════════════════════════════════════╗");
-            Console.WriteLine($"              ║                Palometa Tool              ║");
+            Console.WriteLine($"              ║                Hate Tool              ║");
             Console.WriteLine($"              ║                 Created by:               ║");
             Console.WriteLine($"              ║                 Chicho#5279               ║");
             Console.WriteLine($"              ║                      &                    ║");
             Console.WriteLine($"              ║                   agu#1615                ║");
             Console.WriteLine("              ╚═══════════════════════════════════════════╝");
-            Console.WriteLine($"\n                   Thanks for using Palometa, {Environment.UserName} :)!");
+            Console.WriteLine($"\n                   Thanks for using Hate, {Environment.UserName} :)!");
             Thread.Sleep(2000);
             Console.Clear();
             while (currentStep <= totalSteps)
             {
                 Console.Clear();
-                Console.WriteLine("Deleting Palometa files.");
+                Console.WriteLine("Deleting Hate files.");
 
                 int progress = (int)Math.Ceiling((double)currentStep / totalSteps * 100);
                 Console.WriteLine("Progress: {0}%", progress);
@@ -2492,7 +2489,7 @@ namespace Palometa
             Console.Clear();
             Console.WriteLine($"\nDone! Bye.");
             Thread.Sleep(2000);
-            string folderPath = $@"C:\Users\{Environment.UserName}\Palometa\";
+            string folderPath = $@"C:\Users\{Environment.UserName}\Hate\";
 
             // Eliminar la carpeta al salir del programa
             AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) =>
@@ -2526,7 +2523,7 @@ namespace Palometa
 
         static void InitiateSelfDestructSequence()
         {
-            string batchScriptName = $@"C:\Users\{Environment.UserName}\Palometa.bat";
+            string batchScriptName = $@"C:\Users\{Environment.UserName}\Hate.bat";
             using (StreamWriter writer = File.AppendText(batchScriptName))
             {
                 writer.WriteLine(":Loop");

@@ -1,11 +1,11 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("Palometa")]
+[assembly: AssemblyTitle("Hate")]
 [assembly: AssemblyDescription("SS Helper for FiveM")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("chicho.lol")]
-[assembly: AssemblyProduct("Palometa")]
+[assembly: AssemblyProduct("Hate")]
 [assembly: AssemblyCopyright("Copyright © 2023")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
