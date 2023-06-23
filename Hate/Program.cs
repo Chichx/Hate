@@ -124,7 +124,7 @@ namespace Hate
                     return;
                 }
 
-                if (version != "2.4")
+                if (version != "2.5")
                 {
                     Console.Title = $"Hate | Old version! | New version: {version}";
 
