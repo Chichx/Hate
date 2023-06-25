@@ -16,6 +16,8 @@ using Newtonsoft.Json.Linq;
 using System.Security.Principal;
 using Discord;
 using Discord.Webhook;
+using Discord.Commands;
+using Discord.WebSocket;
 using System.Management;
 using System.Security.Cryptography;
 using Newtonsoft.Json;
@@ -25,7 +27,7 @@ using Color = System.Drawing.Color;
 using BetterConsole;
 using System.ComponentModel;
 using System.Drawing;
-using static System.Windows.Forms.AxHost;
+using System.Security.Policy;
 
 namespace Hate
 
@@ -3011,6 +3013,70 @@ namespace Hate
             Console.ReadLine();
             Console.Clear();
             GUI(args, version).Wait();
+        }
+
+        static async Task PinCheck(string[] args, string version)
+        {
+            Console.WriteLine("[DEBUG] PIN CHECK");
+            var client = new DiscordSocketClient(new DiscordSocketConfig());
+            var commands = new CommandService();
+
+            var token = "MTEyMjQzODM1NTY4NzMyOTg0NA.GcYX7i.1f0GIlga6MMoDoXKgNWZxjw7N4EESYV0F-Xldk";
+            bool pinVerified = false;
+
+            await client.LoginAsync(TokenType.Bot, token);
+            await client.StartAsync();
+
+            client.Ready += async () =>
+            {
+                try
+                {
+                    var channel = client.GetChannel(1122438594913648650) as SocketTextChannel;
+                    var messages = await channel.GetMessagesAsync(50).FlattenAsync();
+                    string hwid = GetHWID();
+                    foreach (var message in messages)
+                    {
+                        Console.Write("Enter PIN: ");
+                        var pinInput = Console.ReadLine();
+                        if (pinInput.Length == 5)
+                        {
+                            var pin = pinInput;
+                            var passw = "{}+12+3´123´12}ññ{}{..as-,.xasdp121´312os2o12089'0¿'12s\\\\/--.-.-.-.-..ñ{ñ{.{ñ.{ñ.{1ñ{2ñ{3ñ{123ñ{1.3ñ{12.{12.ñ{ws.12ñ{s.2{1{s12.{s.{/////'}";
+                            var hashBytes = new SHA1CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(pin + passw));
+                            var hashp = BitConverter.ToString(hashBytes).Replace("-", string.Empty).ToLower();
+                            var content = message.Content;
+                            if (content.Contains(hashp))
+                            {
+                                Console.WriteLine("[DEBUG] PIN VERIFIED");
+                                var sha1 = new SHA1CryptoServiceProvider();
+                                var hash2 = BitConverter.ToString(sha1.ComputeHash(Encoding.UTF8.GetBytes(pin))).Replace("-", string.Empty).ToLower();
+                                await message.DeleteAsync();
+                                await channel.SendMessageAsync($"`pin used`\nUser: {Environment.UserName}\nPin used: {hash2}\nHWID: {hwid}");
+                                pinVerified = true;
+                                break;
+                            } else
+                            {
+                                Console.WriteLine("[DEBUG] PIN INCORRECTO");
+                                Console.Clear();
+                                await PinCheck(args, version);
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error in Ready event: " + ex.Message);
+                }
+            };
+
+            while (!pinVerified)
+            {
+                await Task.Delay(1000);
+            }
+            Console.Clear();
+            await client.LogoutAsync();
+            await client.StopAsync();
+            await GUI(args, version);
         }
 
         static async Task SendWebhook()
