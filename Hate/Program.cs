@@ -2784,6 +2784,7 @@ namespace Hate
                 }
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("\nDone!");
+                Console.WriteLine("Please wait for result!");
                 Thread.Sleep(1000);
             }
             catch
@@ -2804,7 +2805,7 @@ namespace Hate
             Console.ForegroundColor = ConsoleColor.Red;
             Console.SetWindowSize(74, 24);
             Console.WriteLine("              ╔═══════════════════════════════════════════╗");
-            Console.WriteLine($"              ║                Hate Tool              ║");
+            Console.WriteLine($"              ║                  Hate Tool                ║");
             Console.WriteLine($"              ║                 Created by:               ║");
             Console.WriteLine($"              ║                 Chicho#5279               ║");
             Console.WriteLine($"              ║                      &                    ║");
@@ -2913,6 +2914,7 @@ namespace Hate
             if (detections.Count == 0)
             {
                 Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine(" ");
                 Console.WriteLine("Result:");
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("User is legit!");
@@ -2921,6 +2923,7 @@ namespace Hate
             else if (detections.ContainsKey("DPS") || detections.ContainsKey("Dnscache") || detections.ContainsKey("PcaSvc") || detections.ContainsKey("Lsass"))
             {
                 Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine(" ");
                 Console.WriteLine("Result:");
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.WriteLine("User is cheating!");
@@ -2929,6 +2932,7 @@ namespace Hate
             else
             {
                 Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine(" ");
                 Console.WriteLine("Result:");
                 Console.ForegroundColor = ConsoleColor.Yellow;
                 Console.WriteLine("User is suspicious!");
