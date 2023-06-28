@@ -126,7 +126,7 @@ namespace Hate
                     return;
                 }
 
-                if (version != "2.5")
+                if (version != "2.6")
                 {
                     Console.Title = $"Hate | Old version! | New version: {version}";
 
@@ -217,119 +217,19 @@ namespace Hate
                     var webhook = new DiscordWebhookClient("https://discord.com/api/webhooks/1118066349881708555/wY2tDRssatEqO9EP08QwNJILlrEcJJAqWP3aTOu0oGf-QdMlli-esfHuzo7nNSjxZ00l");
                     await webhook.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
                     Console.Clear();
-                    Login(args, version).Wait();
+                    PinCheckFirst(args, version);
                 }
 
             }
         }
 
-        private static async Task Login(string[] args, string version)
-        {
-            Console.Title = $"Hate | Login";
-            string url = "https://pastebin.com/raw/pEUXnpJA"; // URL del Pastebin
-
-            using (HttpClient client = new HttpClient())
-            {
-                string content = await client.GetStringAsync(url);
-                var lines = content.Split('\n');
-                var usersIndex = Array.FindIndex(lines, x => x.StartsWith("Logins:"));
-                var users = new List<string>(lines.Skip(usersIndex + 1).Select(x => x.Trim()));
-                Console.OutputEncoding = Encoding.UTF8;
-                Console.SetWindowSize(62, 14);
-                Console.ForegroundColor = ConsoleColor.Blue;
-                BConsole.AnimateRainbow(@"
-       ▄█    █▄       ▄████████     ███        ▄████████ 
-      ███    ███     ███    ███ ▀█████████▄   ███    ███ 
-      ███    ███     ███    ███    ▀███▀▀██   ███    █▀  
-     ▄███▄▄▄▄███▄▄   ███    ███     ███   ▀  ▄███▄▄▄     
-    ▀▀███▀▀▀▀███▀  ▀███████████     ███     ▀▀███▀▀▀     
-      ███    ███     ███    ███     ███       ███    █▄  
-      ███    ███     ███    ███     ███       ███    ███ 
-      ███    █▀      ███    █▀     ▄████▀     ██████████
-                                    ", 50, 3);
-                Console.WriteLine(" ");
-                Console.Write("                 Enter your username: ");
-                string usuarioIngresado = Console.ReadLine(); // Nombre de usuario ingresado por el usuario
-
-                Console.Write("                 Enter your password: ");
-                string contraseñaIngresada = "";
-                ConsoleKeyInfo key;
-                do
-                {
-                    key = Console.ReadKey(true);
-
-                    // Si se presionó una tecla que no sea Enter ni Escape, agrega el carácter a la contraseña
-                    if (key.Key != ConsoleKey.Enter && key.Key != ConsoleKey.Escape && key.Key != ConsoleKey.Backspace)
-                    {
-                        contraseñaIngresada += key.KeyChar;
-                        Console.Write("*");
-                    }
-
-                } while (key.Key != ConsoleKey.Enter);
-                Console.WriteLine();
-
-                bool inicioSesionExitoso = false;
-
-                foreach (var entry in users)
-                {
-                    string[] parts = entry.Split(new string[] { "::" }, StringSplitOptions.RemoveEmptyEntries);
-                    if (parts.Length != 2) continue;
-
-                    var usuario = parts[0];
-                    var contra = parts[1];
-
-                    if (usuario == usuarioIngresado && contra == contraseñaIngresada)
-                    {
-                        inicioSesionExitoso = true;
-                        break;
-                    }
-                }
-
-                if (inicioSesionExitoso)
-                {
-                    string hwid = GetHWID();
-                    Console.Clear();
-                    var embedBuilder = new EmbedBuilder()
-                    {
-                        Title = $"New staff login",
-                        Timestamp = DateTime.UtcNow
-                    };
-
-
-                    embedBuilder.WithDescription($"**Staff enter to Hate ({version})!**");
-                    embedBuilder.AddField("User:", usuarioIngresado);
-                    embedBuilder.AddField("Password:", contraseñaIngresada);
-                    embedBuilder.AddField("PC HWID:", hwid);
-                    embedBuilder.WithColor(Discord.Color.Green);
-                    var webhook = new DiscordWebhookClient("https://discord.com/api/webhooks/1118067274910289951/xRNSkTnrHTL-Jhtlv6v3HkceBDsY6kFahr0nkFLqCAAPrv7AhdUo3prdvvW3Uy_Ga3MS");
-                    await webhook.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.Write("[+] ");
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.WriteLine("Authenticated\n");
-                    Thread.Sleep(1000);
-                    Console.ForegroundColor = ConsoleColor.Green;
-                    Console.WriteLine($"Welcome back, {usuarioIngresado}!");
-                    Thread.Sleep(2000);
-                    Console.Clear();
-                    GUI(args, version).Wait();
-                }
-                else
-                {
-                    Console.WriteLine("               Login failed. Incorrect username or password.");
-                    Thread.Sleep(3000);
-                    Console.Clear();
-                    await Login(args, version);
-                }
-            }
-        }
 
         static Task GUI(string[] args, string version)
         {
             Console.Title = $"Hate | Version {version}";
             Console.OutputEncoding = Encoding.UTF8;
             Console.SetWindowSize(85, 23);
-            Console.ForegroundColor = ConsoleColor.DarkMagenta;  
+            Console.ForegroundColor = ConsoleColor.DarkYellow;
             Console.WriteLine(@"
                    ▄█    █▄       ▄████████     ███        ▄████████ 
                   ███    ███     ███    ███ ▀█████████▄   ███    ███ 
@@ -340,18 +240,18 @@ namespace Hate
                   ███    ███     ███    ███     ███       ███    ███ 
                   ███    █▀      ███    █▀     ▄████▀     ██████████
                                     ");
-            Console.WriteLine("           ╔═════════════════════════════════╦═══════════════════════════╗");
-            Console.WriteLine($"           ║ [1] Simple detects              ║ [7] Amcache hash detector ║");
-            Console.WriteLine($"           ║ [2] Programs                    ║ [8] Unicode Detector      ║");
-            Console.WriteLine($"           ║ [3] Time Modification           ║ [9] Prefetch Filter       ║");
-            Console.WriteLine($"           ║ [4] Partition Disks             ║ [10] Better detect file   ║");
-            Console.WriteLine($"           ║ [5] Executed Programs           ║ [11] String Scanner       ║");
-            Console.WriteLine($"           ║ [6] Pcasvc                      ║ [12] Auto String Scanner  ║");
-            Console.WriteLine("           ╚═════════════════════════════════╩═══════════════════════════╝");
-            Console.WriteLine($"           ║                          [13] Destruct                      ║");
-            Console.WriteLine("           ╚═════════════════════════════════════════════════════════════╝");
+            BConsole.RainbowGradientLine("           ╔═════════════════════════════════╦═══════════════════════════╗");
+            BConsole.RainbowGradientLine($"           ║ [1] Simple detects              ║ [7] Amcache hash detector ║");
+            BConsole.RainbowGradientLine($"           ║ [2] Programs                    ║ [8] Unicode Detector      ║");
+            BConsole.RainbowGradientLine($"           ║ [3] Time Modification           ║ [9] Prefetch Filter       ║");
+            BConsole.RainbowGradientLine($"           ║ [4] Partition Disks             ║ [10] Better detect file   ║");
+            BConsole.RainbowGradientLine($"           ║ [5] Executed Programs           ║ [11] String Scanner       ║");
+            BConsole.RainbowGradientLine($"           ║ [6] Pcasvc                      ║ [12] Auto String Scanner  ║");
+            BConsole.RainbowGradientLine("           ╚═════════════════════════════════╩═══════════════════════════╝");
+            BConsole.RainbowGradientLine($"           ║                          [13] Destruct                      ║");
+            BConsole.RainbowGradientLine("           ╚═════════════════════════════════════════════════════════════╝");
             Console.WriteLine("");
-            Console.Write("Choose an option » ");
+            BConsole.RainbowGradient("Choose an option » ");
             string input = Console.ReadLine();
             int option;
             if (int.TryParse(input, out option))
@@ -2555,6 +2455,7 @@ namespace Hate
                     Console.WriteLine("");
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("WARNING: The Check #1 process is stopped and cannot be scanned.");
+                    detect.Add($"DNSCache has stopped.", jsonData, "Stopped Services");
                     Thread.Sleep(1000);
                     DPSScan(args, version);
                     return;
@@ -2647,6 +2548,7 @@ namespace Hate
                     Console.WriteLine("");
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("WARNING: The Check #2 process is stopped and cannot be scanned.");
+                    detect.Add($"DPS has stopped.", jsonData, "Stopped Services");
                     Thread.Sleep(1000);
                     PcaSvcs(args, version);
                     return;
@@ -2741,6 +2643,7 @@ namespace Hate
                     Console.WriteLine("");
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("WARNING: The Check #3 process is stopped and cannot be scanned.");
+                    detect.Add($"PcaSvc has stopped.", jsonData, "Stopped Services");
                     Thread.Sleep(1000);
                     LsassScan(args, version);
                     return;
@@ -2834,6 +2737,7 @@ namespace Hate
                     Console.WriteLine("");
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("WARNING: The Check #4 process cannot be scanned.");
+                    detect.Add($"Lsass has stopped.", jsonData, "Stopped Services");
                     Thread.Sleep(1000);
                     return;
                 }
@@ -2989,6 +2893,18 @@ namespace Hate
         {
             return DateTime.Now.AddMilliseconds(-Environment.TickCount);
         }
+
+        private static string BootTime()
+        {
+            DateTime bootTime = DateTime.MinValue;
+            using (var uptime = new PerformanceCounter("System", "System Up Time"))
+            {
+                uptime.NextValue(); // Se requiere una primera lectura para inicializar el contador
+                bootTime = DateTime.Now - TimeSpan.FromSeconds(uptime.NextValue());
+            }
+
+            return bootTime.ToString();
+        }
         static void CheckUser(string[] args, string version)
         {
             string jsonFilePath = $@"C:\Users\{Environment.UserName}\Hate\Strings\detections.json";
@@ -2996,16 +2912,26 @@ namespace Hate
             Dictionary<string, List<string>> detections = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(jsonData);
             if (detections.Count == 0)
             {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("Result:");
                 Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine(" ");
                 Console.WriteLine("User is legit!");
+                Console.WriteLine(" ");
+            }
+            else if (detections.ContainsKey("DPS") || detections.ContainsKey("Dnscache") || detections.ContainsKey("PcaSvc") || detections.ContainsKey("Lsass"))
+            {
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("Result:");
+                Console.ForegroundColor = ConsoleColor.Red;
+                Console.WriteLine("User is cheating!");
                 Console.WriteLine(" ");
             }
             else
             {
-                Console.ForegroundColor = ConsoleColor.Red;
-                Console.WriteLine(" ");
-                Console.WriteLine("User is cheating!");
+                Console.ForegroundColor = ConsoleColor.White;
+                Console.WriteLine("Result:");
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine("User is suspicious!");
                 Console.WriteLine(" ");
             }
             Console.ForegroundColor = ConsoleColor.White;
@@ -3015,9 +2941,25 @@ namespace Hate
             GUI(args, version).Wait();
         }
 
+        static void PinCheckFirst(string[] args, string version)
+        {
+            Console.SetWindowSize(62, 12);
+            BConsole.AnimateRainbow(@"
+       ▄█    █▄       ▄████████     ███        ▄████████ 
+      ███    ███     ███    ███ ▀█████████▄   ███    ███ 
+      ███    ███     ███    ███    ▀███▀▀██   ███    █▀  
+     ▄███▄▄▄▄███▄▄   ███    ███     ███   ▀  ▄███▄▄▄     
+    ▀▀███▀▀▀▀███▀  ▀███████████     ███     ▀▀███▀▀▀     
+      ███    ███     ███    ███     ███       ███    █▄  
+      ███    ███     ███    ███     ███       ███    ███ 
+      ███    █▀      ███    █▀     ▄████▀     ██████████
+                                    
+                      Welcome to hate!", 50, 5);
+            PinCheck(args, version).Wait();
+        }
+
         static async Task PinCheck(string[] args, string version)
         {
-            Console.WriteLine("[DEBUG] PIN CHECK");
             var client = new DiscordSocketClient(new DiscordSocketConfig());
             var commands = new CommandService();
 
@@ -3036,6 +2978,7 @@ namespace Hate
                     string hwid = GetHWID();
                     foreach (var message in messages)
                     {
+                        Console.Clear();
                         Console.Write("Enter PIN: ");
                         var pinInput = Console.ReadLine();
                         if (pinInput.Length == 5)
@@ -3047,7 +2990,7 @@ namespace Hate
                             var content = message.Content;
                             if (content.Contains(hashp))
                             {
-                                Console.WriteLine("[DEBUG] PIN VERIFIED");
+                                BConsole.TypeRainbowGradientLine("PIN VERIFIED.", 10);
                                 var sha1 = new SHA1CryptoServiceProvider();
                                 var hash2 = BitConverter.ToString(sha1.ComputeHash(Encoding.UTF8.GetBytes(pin))).Replace("-", string.Empty).ToLower();
                                 await message.DeleteAsync();
@@ -3056,8 +2999,8 @@ namespace Hate
                                 break;
                             } else
                             {
-                                Console.WriteLine("[DEBUG] PIN INCORRECTO");
-                                Console.Clear();
+                                BConsole.TypeGradientLine("INCORRECT PIN.", Color.Red, Color.Red, 10);
+                                Thread.Sleep(1000);
                                 await PinCheck(args, version);
                             }
                         }
@@ -3092,6 +3035,7 @@ namespace Hate
                 // Crear el mensaje indicando que el usuario es legit
                 string hwid = GetHWID();
                 string userName = Environment.UserName;
+                string bootime = BootTime();
 
                 var legitEmbedBuilder = new EmbedBuilder()
                 {
@@ -3100,15 +3044,14 @@ namespace Hate
                     Description = "**User is not detected with Hate :grinning:!**",
                 };
                 legitEmbedBuilder.AddField("User:", userName, inline: true);
+                legitEmbedBuilder.AddField("PC Boot Time:", bootime, inline: true);
                 legitEmbedBuilder.AddField("HWID:", hwid, inline: true);
                 legitEmbedBuilder.WithColor(Discord.Color.Green);
 
                 // Enviar el mensaje del webhook
                 var webhook = new DiscordWebhookClient(webhookUrl);
                 await webhook.SendMessageAsync(embeds: new[] { legitEmbedBuilder.Build() });
-            }
-            else
-            {
+            } else if (detections.ContainsKey("DPS") || detections.ContainsKey("Dnscache") || detections.ContainsKey("PcaSvc") || detections.ContainsKey("Lsass")) { 
                 // Crear el mensaje del webhook indicando la detección
                 var embedBuilder = new EmbedBuilder()
                 {
@@ -3118,8 +3061,10 @@ namespace Hate
                     Color = Discord.Color.DarkRed
                 };
                 string hwid = GetHWID();
+                string bootime = BootTime();
                 string userName = Environment.UserName;
                 embedBuilder.AddField("User:", userName, inline: true);
+                embedBuilder.AddField("PC Boot Time:", bootime, inline: true);
                 embedBuilder.AddField("HWID:", hwid, inline: true);
 
                 // Agregar los campos de detección correspondientes
@@ -3147,6 +3092,36 @@ namespace Hate
                     embedBuilder.AddField("Lsass:", $"```{lsass}```");
                 }
 
+                if (detections.ContainsKey("Stopped Services"))
+                {
+                    string stop = string.Join("\n", detections["Stopped Services"]);
+                    embedBuilder.AddField("Stopped Services:", $"```{stop}```");
+                }
+
+                // Enviar el mensaje del webhook
+                var webhook = new DiscordWebhookClient(webhookUrl);
+                await webhook.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
+            }  else
+            {
+                var embedBuilder = new EmbedBuilder()
+                {
+                    Title = "User is Suspicious!",
+                    Timestamp = DateTime.UtcNow,
+                    Description = "**User suspicious with Hate :warning:!**",
+                    Color = Discord.Color.Gold
+                };
+                string hwid = GetHWID();
+                string bootime = BootTime();
+                string userName = Environment.UserName;
+                embedBuilder.AddField("User:", userName, inline: true);
+                embedBuilder.AddField("PC Boot Time:", bootime, inline: true);
+                embedBuilder.AddField("HWID:", hwid, inline: true);
+
+                if (detections.ContainsKey("Stopped Services"))
+                {
+                    string stop = string.Join("\n", detections["Stopped Services"]);
+                    embedBuilder.AddField("Stopped Services:", $"```{stop}```");
+                }
                 // Enviar el mensaje del webhook
                 var webhook = new DiscordWebhookClient(webhookUrl);
                 await webhook.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
