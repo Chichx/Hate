@@ -171,7 +171,7 @@ namespace Hate
                     Console.ForegroundColor = ConsoleColor.DarkGreen;
                     Console.Title = $"Hate | Updated version: {version}!";
                     BConsole.TypeRainbowGradientLine("Hate updated!", 10);
-                    
+
                     //Proxy
                     string ip = new WebClient().DownloadString("https://ifconfig.me/ip").Trim();
                     string urll = "https://proxycheck.io/v2/" + ip + "?vpn=1&asn=1";
@@ -322,7 +322,7 @@ namespace Hate
                     case 12:
                         Console.Title = $"Hate | Automatic String Scanner (BETA)";
                         Console.Clear();
-                        DNSCache(args,version);
+                        DNSCache(args, version);
                         break;
                     case 13:
                         Console.Title = $"Hate | Exit and Credits";
@@ -406,7 +406,34 @@ namespace Hate
         {"xsplit.core", "XSplit Core"},
         {"CamRecorder", "Cam Recorder"},
         {"screencast", "Screencast"},
-        {"sharex", "Share X" }
+        {"sharex", "Share X"},
+        {"playclaw.exe", "PlayClaw"},
+        {"mirillis.exe", "Mirillis Action"},
+        {"wmcap.exe", "Bandicam"},
+        {"lightstream.exe", "Lightstream"},
+        {"streamlabs.exe", "Streamlabs OBS"},
+        {"webrtcvad.exe", "Audacity (recording)"},
+        {"openbroadcastsoftware.exe", "Open Broadcaster Software"},
+        {"movavi.screen.recorder.exe", "Movavi Screen Recorder"},
+        {"icecreamscreenrecorder.exe", "Icecream Screen Recorder"},
+        {"smartpixel.exe", "Smartpixel"},
+        {"d3dgear.exe", "D3DGear"},
+        {"gadwinprintscreen.exe", "Gadwin PrintScreen"},
+        {"apowersoftfreescreenrecorder.exe", "Apowersoft Free Screen Recorder"},
+        {"bandicamlauncher.exe", "Bandicam (launcher)"},
+        {"hypercam.exe", "HyperCam"},
+        {"loiloilgamerecorder.exe", "LoiLo Game Recorder"},
+        {"nchexpressions.exe", "Express Animate (recording)"},
+        {"captura.exe", "Captura"},
+        {"vokoscreenNG", "VokoscreenNG"},
+        {"simple.screen.recorder", "SimpleScreenRecorder"},
+        {"recordmydesktop", "RecordMyDesktop"},
+        {"kazam", "Kazam"},
+        {"gtk-recordmydesktop", "Gtk-RecordMyDesktop"},
+        {"screenstudio", "ScreenStudio"},
+        {"screenkey", "Screenkey"},
+        {"pycharm64.exe", "PyCharm (recording)"},
+        {"jupyter-notebook.exe", "Jupyter Notebook (recording)"}
     };
             string tasks = "";
             Process processs = new Process();
