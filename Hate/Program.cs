@@ -1277,17 +1277,13 @@ namespace Hate
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Clear();
-                Read();
+                Read(args, version);
             }
             else if (choice == "2")
             {
                 Console.ForegroundColor = ConsoleColor.Red;
                 Console.Clear();
                 ReadBoot(args, version);
-            }
-            else
-            {
-                Environment.Exit(0);
             }
 
             using (StreamReader reader = new StreamReader($@"C:\Users\{username}\Hate\Amcachehash\res.json"))
@@ -1334,6 +1330,9 @@ namespace Hate
             }
 
             Process.Start($@"C:\Users\{username}\Hate\Amcachehash\res.txt");
+            Thread.Sleep(2000);
+            Console.Clear();
+            GUI(args, version).Wait();
         }
 
         static void Amcache()
@@ -1412,11 +1411,12 @@ namespace Hate
                 Console.Clear();
                 Console.WriteLine("No data has been detected since the last reboot");
                 Thread.Sleep(2000);
+                Console.Clear();
                 GUI(args, version).Wait();
             }
         }
 
-        static void Read()
+        static void Read(string[] args, string version)
         {
             string folderPath = $@"C:\Users\{Environment.UserName}\Hate\Amcachehash";
             string[] columnas_deseadas = { "SHA1", "IsOsComponent", "FullPath", "FileKeyLastWriteTimestamp" };
@@ -1449,6 +1449,9 @@ namespace Hate
                     writer.WriteLine(JsonConvert.SerializeObject(datos_fila));
                 }
             }
+            Thread.Sleep(2000);
+            Console.Clear();
+            GUI(args, version).Wait();
         }
 
         static dynamic QueryVirusTotal(string sha1, string API_KEY)
