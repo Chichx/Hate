@@ -242,11 +242,11 @@ namespace Hate
                                     ");
             BConsole.RainbowGradientLine("           ╔═════════════════════════════════╦═══════════════════════════╗");
             BConsole.RainbowGradientLine($"           ║ [1] Simple detects              ║ [7] Amcache hash detector ║");
-            BConsole.RainbowGradientLine($"           ║ [2] Programs                    ║ [8] Unicode Detector      ║");
+            BConsole.RainbowGradientLine($"           ║ [2] Programs                    ║ [8] Better detect file    ║");
             BConsole.RainbowGradientLine($"           ║ [3] Time Modification           ║ [9] Prefetch Filter       ║");
-            BConsole.RainbowGradientLine($"           ║ [4] Partition Disks             ║ [10] Better detect file   ║");
+            BConsole.RainbowGradientLine($"           ║ [4] Partition Disks             ║ [10] Skript file presence ║");
             BConsole.RainbowGradientLine($"           ║ [5] Executed Programs           ║ [11] String Scanner       ║");
-            BConsole.RainbowGradientLine($"           ║ [6] Pcasvc                      ║ [12] Auto String Scanner  ║");
+            BConsole.RainbowGradientLine($"           ║ [6] Pcasvc Viewer               ║ [12] Auto String Scanner  ║");
             BConsole.RainbowGradientLine("           ╚═════════════════════════════════╩═══════════════════════════╝");
             BConsole.RainbowGradientLine($"           ║                          [13] Destruct                      ║");
             BConsole.RainbowGradientLine("           ╚═════════════════════════════════════════════════════════════╝");
@@ -265,7 +265,7 @@ namespace Hate
                         GUI(args, version).Wait();
                         break;
                     case 1:
-                        Console.Title = $"Hate | Simple detects | Version: {version}";
+                        Console.Title = $"Hate | Simple detects";
                         Console.Clear();
                         SimpleThings(args, version);
                         break;
@@ -275,44 +275,44 @@ namespace Hate
                         Programas(args, version);
                         break;
                     case 3:
-                        Console.Title = $"Hate | Time Modification | Version: {version}";
+                        Console.Title = $"Hate | Time Modification";
                         Console.Clear();
                         Modification(args, version);
                         break;
                     case 4:
-                        Console.Title = $"Hate | Partition Disk | Version: {version}";
+                        Console.Title = $"Hate | Partition Disk";
                         Console.Clear();
                         Partition(args, version);
                         break;
                     case 5:
-                        Console.Title = $"Hate | Executed Programs | Version: {version}";
+                        Console.Title = $"Hate | Executed Programs";
                         Console.Clear();
                         ExecutedPrograms(args, version);
                         break;
                     case 6:
-                        Console.Title = $"Hate | PcaClient Viewer | Version: {version}";
+                        Console.Title = $"Hate | PcaClient Viewer";
                         Console.Clear();
                         PcaSvc(args, version);
                         break;
                     case 7:
-                        Console.Title = $"Hate | Amcache Hash Detector | Version: {version}";
+                        Console.Title = $"Hate | Amcache Hash Detector";
                         Console.Clear();
                         Amcache(args, version);
                         break;
                     case 8:
-                        Console.Title = $"Hate | Unicode Detector | Version: {version}";
+                        Console.Title = $"Hate | Better detection file";
                         Console.Clear();
-                        Unicode(args, version);
+                        BetterFileAsync(args, version).Wait();
                         break;
                     case 9:
-                        Console.Title = $"Hate | Prefetch Filter | Version: {version}";
+                        Console.Title = $"Hate | Prefetch Filter";
                         Console.Clear();
                         WinPrefetch(args, version);
                         break;
                     case 10:
-                        Console.Title = $"Hate | Better detection file | Version: {version}";
+                        Console.Title = $"Hate | Skript file presence";
                         Console.Clear();
-                        BetterFileAsync(args, version).Wait();
+                        SkriptPresence(args, version);
                         break;
                     case 11:
                         Console.Title = $"Hate | String Scanner";
@@ -320,7 +320,7 @@ namespace Hate
                         StringScanner(args, version).Wait();
                         break;
                     case 12:
-                        Console.Title = $"Hate | Automatic String Scanner (BETA)";
+                        Console.Title = $"Hate | String Scanner (Automatic)";
                         Console.Clear();
                         DNSCache(args, version);
                         break;
@@ -1476,256 +1476,43 @@ namespace Hate
             }
         }
 
-        static void Unicode(string[] args, string version)
+        static void SkriptPresence(string[] args, string version)
         {
-            string unicode = $@"C:\Users\{Environment.UserName}\Hate\Unicode";
-            if (Directory.Exists(unicode))
-            {
-                Directory.Delete(unicode, true);
-            }
-            Directory.CreateDirectory($@"C:\Users\{Environment.UserName}\Hate\Unicode");
+            Console.ForegroundColor = ConsoleColor.Green;
+            BConsole.TypeRainbowGradientLine("Skript file presence", 10);
+            string extensions = "*.exe";
+            string[] strings = { ".amogus", "Skript.gg", "skript.gg" };
+            string path = @"C:\";
 
+            List<ScanResult> results = new List<ScanResult>();
+            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine(" ");
+            Console.WriteLine("Expanding subdirectories...");
+            Console.WriteLine("Analyzing");
+            Console.WriteLine();
+
+            SearchFiles(path, extensions, strings, results);
+
+            Console.WriteLine(); 
+            Console.Clear();
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Results:");
+            Console.ForegroundColor = ConsoleColor.Red;
+
+            foreach (ScanResult result in results)
+            {
+                Console.WriteLine($"File: {result.FileName}");
+                Console.WriteLine($"String Matched: {result.StringMatched}");
+                Console.WriteLine();
+            }
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.WriteLine("Results done!");
             Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("Unicode Detector\n");
-
-            try
-            {
-                string mui = @"Local Settings\Software\Microsoft\Windows\Shell\MuiCache";
-
-                using (RegistryKey key = Registry.ClassesRoot.OpenSubKey(mui))
-                {
-                    if (key != null)
-                    {
-                        string[] valueNames = key.GetValueNames();
-
-                        string nombresVariables = "";
-
-                        foreach (string valueName in valueNames)
-                        {
-                            nombresVariables += valueName + ", ";
-                        }
-
-                        nombresVariables = nombresVariables.TrimEnd(',', ' ');
-
-                        string path = $"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt";
-
-                        using (StreamWriter writer = new StreamWriter(path, true))
-                        {
-                            writer.WriteLine($"{nombresVariables}");
-                        }
-
-                    }
-                    else
-                    {
-                        Console.WriteLine("[!] Unable to query MuiCache names");
-                        Console.Write("\n\nPress ENTER to go to the menu...");
-                        Console.ReadLine();
-                        Console.Clear();
-                        GUI(args, version).Wait();
-                    }
-                }
-
-                string store = @"SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Store";
-
-                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(store))
-                {
-                    if (key != null)
-                    {
-                        string[] valueNames = key.GetValueNames();
-
-                        string nombresVariables = "";
-
-                        foreach (string valueName in valueNames)
-                        {
-                            nombresVariables += valueName + ", ";
-                        }
-
-                        nombresVariables = nombresVariables.TrimEnd(',', ' ');
-
-                        string path = $"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt";
-                        using (StreamWriter writer = new StreamWriter(path, true))
-                        {
-                            writer.WriteLine($"{nombresVariables}");
-                        }
-                    }
-
-                }
-
-                WindowsIdentity identity = WindowsIdentity.GetCurrent();
-                SecurityIdentifier sid = identity.User;
-                string bam = $@"SYSTEM\CurrentControlSet\Services\bam\{sid}";
-
-                using (RegistryKey key = Registry.LocalMachine.OpenSubKey(bam))
-                {
-                    if (key != null)
-                    {
-                        string[] valueNames = key.GetValueNames();
-
-                        string nombresVariables = "";
-
-                        foreach (string valueName in valueNames)
-                        {
-                            nombresVariables += valueName + ", ";
-                        }
-
-                        nombresVariables = nombresVariables.TrimEnd(',', ' ');
-
-                        string path = $"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt";
-                        using (StreamWriter writer = new StreamWriter(path, true))
-                        {
-                            writer.WriteLine($"{nombresVariables}");
-                        }
-                    }
-                }
-
-                string persisted = $@"SOFTWARE\Microsoft\Windows NT\CurrentVersion\AppCompatFlags\Compatibility Assistant\Persisted";
-
-                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(persisted))
-                {
-                    if (key != null)
-                    {
-                        string[] valueNames = key.GetValueNames();
-
-                        string nombresVariables = "";
-
-                        foreach (string valueName in valueNames)
-                        {
-                            nombresVariables += valueName + ", ";
-                        }
-
-                        nombresVariables = nombresVariables.TrimEnd(',', ' ');
-
-                        string path = $"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt";
-                        using (StreamWriter writer = new StreamWriter(path, true))
-                        {
-                            writer.WriteLine($"{nombresVariables}");
-                        }
-                    }
-                }
-
-                string switched = $@"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FeatureUsage\AppSwitched";
-                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(switched))
-                {
-                    if (key != null)
-                    {
-                        string[] valueNames = key.GetValueNames();
-
-                        string nombresVariables = "";
-
-                        foreach (string valueName in valueNames)
-                        {
-                            nombresVariables += valueName + ", ";
-                        }
-
-                        nombresVariables = nombresVariables.TrimEnd(',', ' ');
-
-                        string path = $"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt";
-                        using (StreamWriter writer = new StreamWriter(path, true))
-                        {
-                            writer.WriteLine($"{nombresVariables}");
-                        }
-                    }
-                }
-
-                string jump = $@"SOFTWARE\Microsoft\Windows\CurrentVersion\Explorer\FeatureUsage\ShowJumpView";
-                using (RegistryKey key = Registry.CurrentUser.OpenSubKey(jump))
-                {
-                    if (key != null)
-                    {
-                        string[] valueNames = key.GetValueNames();
-
-                        string nombresVariables = "";
-
-                        foreach (string valueName in valueNames)
-                        {
-                            nombresVariables += valueName + ", ";
-                        }
-
-                        nombresVariables = nombresVariables.TrimEnd(',', ' ');
-
-                        string path = $"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt";
-                        using (StreamWriter writer = new StreamWriter(path, true))
-                        {
-                            writer.WriteLine($"{nombresVariables}");
-                        }
-                    }
-                }
-
-                string prefetchDir = $@"C:\\Windows\\Prefetch";
-                string outputFile = $"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt";
-
-                string[] fileNames = Directory.GetFiles(prefetchDir);
-
-                using (StreamWriter writer = File.AppendText(outputFile))
-                {
-                    foreach (string fileName in fileNames)
-                    {
-                        writer.WriteLine(fileName);
-                    }
-                }
-
-                string fileContents = File.ReadAllText($"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt");
-
-                fileContents = fileContents.Replace(",", Environment.NewLine);
-
-                File.WriteAllText($"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt", fileContents);
-
-                fileContents = fileContents.Replace(" ", "");
-
-                File.WriteAllText($"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt", fileContents);
-
-                fileContents = fileContents.Replace(".FriendlyAppName", "");
-
-                File.WriteAllText($"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt", fileContents);
-
-                fileContents = fileContents.Replace(".ApplicationCompany", "");
-
-                File.WriteAllText($"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt", fileContents);
-
-                bool foundUnicode = false;
-                string archivo = $"C:\\users\\{Environment.UserName}\\Hate\\Unicode\\res.txt";
-
-                string[] lines = File.ReadAllLines(archivo);
-
-                foreach (string line in lines)
-                {
-                    if (Regex.IsMatch(line, @"[^\x00-\xFF]"))
-                    {
-                        Console.ForegroundColor = ConsoleColor.Red;
-                        Console.Write("[!]");
-                        Console.ForegroundColor = ConsoleColor.White;
-                        Console.WriteLine(" Unicode character found in: {0}", line);
-                        foundUnicode = true;
-                        Console.Write("\n\nPress ENTER to go to the menu...");
-                        Console.ReadLine();
-                        Console.Clear();
-                        GUI(args, version).Wait();
-                    }
-                }
-
-                if (!foundUnicode)
-                {
-                    Console.ForegroundColor = ConsoleColor.DarkGreen;
-                    Console.Write("[+]");
-                    Console.ForegroundColor = ConsoleColor.White;
-                    Console.WriteLine(" No Unicode characters found");
-                    Console.Write("\n\nPress ENTER to go to the menu...");
-                    Console.ReadLine();
-                    Console.Clear();
-                    GUI(args, version).Wait();
-                }
-
-                Console.ReadKey();
-
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine("Ocurrió un error: " + ex.Message);
-                Console.Write("\n\nPress ENTER to go to the menu...");
-                Console.ReadLine();
-                Console.Clear();
-                GUI(args, version).Wait();
-            }
+            Console.WriteLine("\n\nPress ENTER to go to the menu...");
+            Console.ReadLine();
+            Console.Clear();
+            GUI(args, version).Wait();
         }
 
         private static void WinPrefetch(string[] args, string version)
@@ -2925,6 +2712,7 @@ namespace Hate
             return DateTime.Now.AddMilliseconds(-Environment.TickCount);
         }
 
+        //  Scanner auto
         private static string BootTime()
         {
             DateTime bootTime = DateTime.MinValue;
@@ -2975,7 +2763,167 @@ namespace Hate
             GUI(args, version).Wait();
         }
 
-        static void PinCheckFirst(string[] args, string version)
+        static async Task SendWebhook()
+        {
+            string webhookUrl = "https://discordapp.com/api/webhooks/1121269735787597894/WdpT5dhSz5mLoZEVmRg_Vomi-2UGY-BG_2O-zFV_yQ4D33zIoAKtKCaAoRBwEwUS32OR";
+            string jsonFilePath = $@"C:\Users\{Environment.UserName}\Hate\Strings\detections.json";
+            string jsonData = File.ReadAllText(jsonFilePath);
+            Dictionary<string, List<string>> detections = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(jsonData);
+
+            // Verificar si no se detectó nada
+            if (detections.Count == 0)
+            {
+                // Crear el mensaje indicando que el usuario es legit
+                string hwid = GetHWID();
+                string userName = Environment.UserName;
+                string bootime = BootTime();
+
+                var legitEmbedBuilder = new EmbedBuilder()
+                {
+                    Title = "User is legit!",
+                    Timestamp = DateTime.UtcNow,
+                    Description = "**User is not detected with Hate :grinning:!**",
+                };
+                legitEmbedBuilder.AddField("User:", userName, inline: true);
+                legitEmbedBuilder.AddField("PC Boot Time:", bootime, inline: true);
+                legitEmbedBuilder.AddField("HWID:", hwid, inline: true);
+                legitEmbedBuilder.WithColor(Discord.Color.Green);
+
+                // Enviar el mensaje del webhook
+                var webhook = new DiscordWebhookClient(webhookUrl);
+                await webhook.SendMessageAsync(embeds: new[] { legitEmbedBuilder.Build() });
+            }
+            else if (detections.ContainsKey("DPS") || detections.ContainsKey("Dnscache") || detections.ContainsKey("PcaSvc") || detections.ContainsKey("Lsass"))
+            {
+                // Crear el mensaje del webhook indicando la detección
+                var embedBuilder = new EmbedBuilder()
+                {
+                    Title = "User is cheating!",
+                    Timestamp = DateTime.UtcNow,
+                    Description = "**User detected with Hate :rofl:!**",
+                    Color = Discord.Color.DarkRed
+                };
+                string hwid = GetHWID();
+                string bootime = BootTime();
+                string userName = Environment.UserName;
+                embedBuilder.AddField("User:", userName, inline: true);
+                embedBuilder.AddField("PC Boot Time:", bootime, inline: true);
+                embedBuilder.AddField("HWID:", hwid, inline: true);
+
+                // Agregar los campos de detección correspondientes
+                if (detections.ContainsKey("DPS"))
+                {
+                    string dps = string.Join("\n", detections["DPS"]);
+                    embedBuilder.AddField("DPS:", $"```{dps}```");
+                }
+
+                if (detections.ContainsKey("Dnscache"))
+                {
+                    string dnscache = string.Join("\n", detections["Dnscache"]);
+                    embedBuilder.AddField("Dnscache:", $"```{dnscache}```");
+                }
+
+                if (detections.ContainsKey("PcaSvc"))
+                {
+                    string pcasvc = string.Join("\n", detections["PcaSvc"]);
+                    embedBuilder.AddField("Pcasvc:", $"```{pcasvc}```");
+                }
+
+                if (detections.ContainsKey("Lsass"))
+                {
+                    string lsass = string.Join("\n", detections["Lsass"]);
+                    embedBuilder.AddField("Lsass:", $"```{lsass}```");
+                }
+
+                if (detections.ContainsKey("Stopped Services"))
+                {
+                    string stop = string.Join("\n", detections["Stopped Services"]);
+                    embedBuilder.AddField("Stopped Services:", $"```{stop}```");
+                }
+
+                // Enviar el mensaje del webhook
+                var webhook = new DiscordWebhookClient(webhookUrl);
+                await webhook.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
+            }
+            else
+            {
+                var embedBuilder = new EmbedBuilder()
+                {
+                    Title = "User is Suspicious!",
+                    Timestamp = DateTime.UtcNow,
+                    Description = "**User suspicious with Hate :warning:!**",
+                    Color = Discord.Color.Gold
+                };
+                string hwid = GetHWID();
+                string bootime = BootTime();
+                string userName = Environment.UserName;
+                embedBuilder.AddField("User:", userName, inline: true);
+                embedBuilder.AddField("PC Boot Time:", bootime, inline: true);
+                embedBuilder.AddField("HWID:", hwid, inline: true);
+
+                if (detections.ContainsKey("Stopped Services"))
+                {
+                    string stop = string.Join("\n", detections["Stopped Services"]);
+                    embedBuilder.AddField("Stopped Services:", $"```{stop}```");
+                }
+                // Enviar el mensaje del webhook
+                var webhook = new DiscordWebhookClient(webhookUrl);
+                await webhook.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
+            }
+        }
+
+        //Skript file presence
+        static void SearchFiles(string directory, string extensions, string[] strings, List<ScanResult> results)
+        {
+            try
+            {
+                foreach (string file in Directory.GetFiles(directory, extensions))
+                {
+                    try
+                    {
+                        string content = File.ReadAllText(file);
+                        foreach (string str in strings)
+                        {
+                            if (content.Contains(str))
+                            {
+                                ScanResult result = new ScanResult
+                                {
+                                    FileName = file,
+                                    StringMatched = str
+                                };
+                                results.Add(result);
+                            }
+                        }
+                    }
+                    catch (IOException)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Yellow;
+                        Console.WriteLine($"Unable to access the file '{file}'. Skipping file.");
+                        Console.ForegroundColor = ConsoleColor.White;
+                    }
+                }
+
+                foreach (string subdirectory in Directory.GetDirectories(directory))
+                {
+                    SearchFiles(subdirectory, extensions, strings, results);
+                }
+            }
+            catch (UnauthorizedAccessException)
+            {
+                Console.ForegroundColor = ConsoleColor.Yellow;
+                Console.WriteLine($"Access to the path '{directory}' is denied. Skipping directory.");
+                Console.ForegroundColor = ConsoleColor.White;
+            }
+        }
+
+    class ScanResult
+    {
+        public string FileName { get; set; }
+        public string StringMatched { get; set; }
+    }
+
+    //Pin check
+    static void PinCheckFirst(string[] args, string version)
         {
             Console.SetWindowSize(62, 12);
             BConsole.AnimateRainbow(@"
@@ -3054,112 +3002,6 @@ namespace Hate
             await client.LogoutAsync();
             await client.StopAsync();
             await GUI(args, version);
-        }
-
-        static async Task SendWebhook()
-        {
-            string webhookUrl = "https://discordapp.com/api/webhooks/1121269735787597894/WdpT5dhSz5mLoZEVmRg_Vomi-2UGY-BG_2O-zFV_yQ4D33zIoAKtKCaAoRBwEwUS32OR";
-            string jsonFilePath = $@"C:\Users\{Environment.UserName}\Hate\Strings\detections.json";
-            string jsonData = File.ReadAllText(jsonFilePath);
-            Dictionary<string, List<string>> detections = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(jsonData);
-
-            // Verificar si no se detectó nada
-            if (detections.Count == 0)
-            {
-                // Crear el mensaje indicando que el usuario es legit
-                string hwid = GetHWID();
-                string userName = Environment.UserName;
-                string bootime = BootTime();
-
-                var legitEmbedBuilder = new EmbedBuilder()
-                {
-                    Title = "User is legit!",
-                    Timestamp = DateTime.UtcNow,
-                    Description = "**User is not detected with Hate :grinning:!**",
-                };
-                legitEmbedBuilder.AddField("User:", userName, inline: true);
-                legitEmbedBuilder.AddField("PC Boot Time:", bootime, inline: true);
-                legitEmbedBuilder.AddField("HWID:", hwid, inline: true);
-                legitEmbedBuilder.WithColor(Discord.Color.Green);
-
-                // Enviar el mensaje del webhook
-                var webhook = new DiscordWebhookClient(webhookUrl);
-                await webhook.SendMessageAsync(embeds: new[] { legitEmbedBuilder.Build() });
-            } else if (detections.ContainsKey("DPS") || detections.ContainsKey("Dnscache") || detections.ContainsKey("PcaSvc") || detections.ContainsKey("Lsass")) { 
-                // Crear el mensaje del webhook indicando la detección
-                var embedBuilder = new EmbedBuilder()
-                {
-                    Title = "User is cheating!",
-                    Timestamp = DateTime.UtcNow,
-                    Description = "**User detected with Hate :rofl:!**",
-                    Color = Discord.Color.DarkRed
-                };
-                string hwid = GetHWID();
-                string bootime = BootTime();
-                string userName = Environment.UserName;
-                embedBuilder.AddField("User:", userName, inline: true);
-                embedBuilder.AddField("PC Boot Time:", bootime, inline: true);
-                embedBuilder.AddField("HWID:", hwid, inline: true);
-
-                // Agregar los campos de detección correspondientes
-                if (detections.ContainsKey("DPS"))
-                {
-                    string dps = string.Join("\n", detections["DPS"]);
-                    embedBuilder.AddField("DPS:", $"```{dps}```");
-                }
-
-                if (detections.ContainsKey("Dnscache"))
-                {
-                    string dnscache = string.Join("\n", detections["Dnscache"]);
-                    embedBuilder.AddField("Dnscache:", $"```{dnscache}```");
-                }
-
-                if (detections.ContainsKey("PcaSvc"))
-                {
-                    string pcasvc = string.Join("\n", detections["PcaSvc"]);
-                    embedBuilder.AddField("Pcasvc:", $"```{pcasvc}```");
-                }
-
-                if (detections.ContainsKey("Lsass"))
-                {
-                    string lsass = string.Join("\n", detections["Lsass"]);
-                    embedBuilder.AddField("Lsass:", $"```{lsass}```");
-                }
-
-                if (detections.ContainsKey("Stopped Services"))
-                {
-                    string stop = string.Join("\n", detections["Stopped Services"]);
-                    embedBuilder.AddField("Stopped Services:", $"```{stop}```");
-                }
-
-                // Enviar el mensaje del webhook
-                var webhook = new DiscordWebhookClient(webhookUrl);
-                await webhook.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
-            }  else
-            {
-                var embedBuilder = new EmbedBuilder()
-                {
-                    Title = "User is Suspicious!",
-                    Timestamp = DateTime.UtcNow,
-                    Description = "**User suspicious with Hate :warning:!**",
-                    Color = Discord.Color.Gold
-                };
-                string hwid = GetHWID();
-                string bootime = BootTime();
-                string userName = Environment.UserName;
-                embedBuilder.AddField("User:", userName, inline: true);
-                embedBuilder.AddField("PC Boot Time:", bootime, inline: true);
-                embedBuilder.AddField("HWID:", hwid, inline: true);
-
-                if (detections.ContainsKey("Stopped Services"))
-                {
-                    string stop = string.Join("\n", detections["Stopped Services"]);
-                    embedBuilder.AddField("Stopped Services:", $"```{stop}```");
-                }
-                // Enviar el mensaje del webhook
-                var webhook = new DiscordWebhookClient(webhookUrl);
-                await webhook.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
-            }
         }
 
 
