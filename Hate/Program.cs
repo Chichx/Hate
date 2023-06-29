@@ -126,7 +126,7 @@ namespace Hate
                     return;
                 }
 
-                if (version != "2.6")
+                if (version != "2.7")
                 {
                     Console.Title = $"Hate | Old version! | New version: {version}";
 
@@ -1495,19 +1495,26 @@ namespace Hate
 
             Console.WriteLine(); 
             Console.Clear();
-            Console.ForegroundColor = ConsoleColor.Green;
+            Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("Results:");
-            Console.ForegroundColor = ConsoleColor.Red;
+            Console.WriteLine();
 
-            foreach (ScanResult result in results)
+            if (results.Count > 0)
             {
-                Console.WriteLine($"File: {result.FileName}");
-                Console.WriteLine($"String Matched: {result.StringMatched}");
-                Console.WriteLine();
+                foreach (ScanResult result in results)
+                {
+                    Console.ForegroundColor = ConsoleColor.Red;
+                    Console.WriteLine($"File: {result.FileName}");
+                    Console.WriteLine($"String Matched: {result.StringMatched}");
+                    Console.WriteLine();
+                }
+            }
+            else
+            {
+                Console.ForegroundColor = ConsoleColor.Green;
+                Console.WriteLine("No skript presence detected in this PC.");
             }
 
-            Console.ForegroundColor = ConsoleColor.Green;
-            Console.WriteLine("Results done!");
             Console.ForegroundColor = ConsoleColor.White;
             Console.WriteLine("\n\nPress ENTER to go to the menu...");
             Console.ReadLine();
