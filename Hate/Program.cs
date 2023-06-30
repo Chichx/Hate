@@ -13,7 +13,6 @@ using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using System.Security.Principal;
 using Discord;
 using Discord.Webhook;
 using Discord.Commands;
@@ -26,8 +25,6 @@ using System.Reflection;
 using Color = System.Drawing.Color;
 using BetterConsole;
 using System.ComponentModel;
-using System.Drawing;
-using System.Security.Policy;
 
 namespace Hate
 
@@ -2922,8 +2919,7 @@ namespace Hate
                 Console.ForegroundColor = ConsoleColor.White;
             }
         }
-
-    class ScanResult
+        class ScanResult
     {
         public string FileName { get; set; }
         public string StringMatched { get; set; }
@@ -2986,7 +2982,8 @@ namespace Hate
                                 await channel.SendMessageAsync($"`pin used`\nUser: {Environment.UserName}\nPin used: {hash2}\nHWID: {hwid}");
                                 pinVerified = true;
                                 break;
-                            } else
+                            }
+                            else
                             {
                                 BConsole.TypeGradientLine("INCORRECT PIN.", Color.Red, Color.Red, 10);
                                 Thread.Sleep(1000);
