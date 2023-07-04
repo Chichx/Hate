@@ -123,7 +123,7 @@ namespace Hate
                     return;
                 }
 
-                if (version != "2.7")
+                if (version != "2.8")
                 {
                     Console.Title = $"Hate | Old version! | New version: {version}";
 
@@ -241,11 +241,11 @@ namespace Hate
             BConsole.RainbowGradientLine($"           ║ [1] Simple detects              ║ [7] Amcache hash detector ║");
             BConsole.RainbowGradientLine($"           ║ [2] Programs                    ║ [8] Better detect file    ║");
             BConsole.RainbowGradientLine($"           ║ [3] Time Modification           ║ [9] Prefetch Filter       ║");
-            BConsole.RainbowGradientLine($"           ║ [4] Partition Disks             ║ [10] Skript file presence ║");
-            BConsole.RainbowGradientLine($"           ║ [5] Executed Programs           ║ [11] String Scanner       ║");
-            BConsole.RainbowGradientLine($"           ║ [6] Pcasvc Viewer               ║ [12] Auto String Scanner  ║");
+            BConsole.RainbowGradientLine($"           ║ [4] Partition Disks             ║ [10] String Scanner       ║");
+            BConsole.RainbowGradientLine($"           ║ [5] Executed Programs           ║ [11] Auto String Scanner  ║");
+            BConsole.RainbowGradientLine($"           ║ [6] Pcasvc Viewer               ║                           ║");
             BConsole.RainbowGradientLine("           ╚═════════════════════════════════╩═══════════════════════════╝");
-            BConsole.RainbowGradientLine($"           ║                          [13] Destruct                      ║");
+            BConsole.RainbowGradientLine($"           ║                          [12] Destruct                      ║");
             BConsole.RainbowGradientLine("           ╚═════════════════════════════════════════════════════════════╝");
             Console.WriteLine("");
             BConsole.RainbowGradient("Choose an option » ");
@@ -307,21 +307,16 @@ namespace Hate
                         WinPrefetch(args, version);
                         break;
                     case 10:
-                        Console.Title = $"Hate | Skript file presence";
-                        Console.Clear();
-                        SkriptPresence(args, version);
-                        break;
-                    case 11:
                         Console.Title = $"Hate | String Scanner";
                         Console.Clear();
                         StringScanner(args, version).Wait();
                         break;
-                    case 12:
+                    case 11:
                         Console.Title = $"Hate | String Scanner (Automatic)";
                         Console.Clear();
                         DNSCache(args, version);
                         break;
-                    case 13:
+                    case 12:
                         Console.Title = $"Hate | Exit and Credits";
                         Console.Clear();
                         ExitAndCredits(args, version);
@@ -1473,51 +1468,7 @@ namespace Hate
             }
         }
 
-        static void SkriptPresence(string[] args, string version)
-        {
-            Console.ForegroundColor = ConsoleColor.Green;
-            BConsole.TypeRainbowGradientLine("Skript file presence", 10);
-            string extensions = "*.exe";
-            string[] strings = { ".amogus", "Skript.gg", "skript.gg" };
-            string path = @"C:\";
 
-            List<ScanResult> results = new List<ScanResult>();
-            Console.ForegroundColor = ConsoleColor.Red;
-            Console.WriteLine(" ");
-            Console.WriteLine("Expanding subdirectories...");
-            Console.WriteLine("Analyzing");
-            Console.WriteLine();
-
-            SearchFiles(path, extensions, strings, results);
-
-            Console.WriteLine(); 
-            Console.Clear();
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("Results:");
-            Console.WriteLine();
-
-            if (results.Count > 0)
-            {
-                foreach (ScanResult result in results)
-                {
-                    Console.ForegroundColor = ConsoleColor.Red;
-                    Console.WriteLine($"File: {result.FileName}");
-                    Console.WriteLine($"String Matched: {result.StringMatched}");
-                    Console.WriteLine();
-                }
-            }
-            else
-            {
-                Console.ForegroundColor = ConsoleColor.Green;
-                Console.WriteLine("No skript presence detected in this PC.");
-            }
-
-            Console.ForegroundColor = ConsoleColor.White;
-            Console.WriteLine("\n\nPress ENTER to go to the menu...");
-            Console.ReadLine();
-            Console.Clear();
-            GUI(args, version).Wait();
-        }
 
         private static void WinPrefetch(string[] args, string version)
         {
@@ -1963,7 +1914,8 @@ namespace Hate
             Console.WriteLine("10. Autopsy");
             Console.WriteLine("11. Journal Files");
             Console.WriteLine("12. OsForensics");
-            Console.WriteLine("13. Menu");
+            Console.WriteLine("13. Skript file presence");
+            Console.WriteLine("14. Menu");
             Console.WriteLine(" ");
             Console.Write("Choose an option » ");
             string programInput = Console.ReadLine();
@@ -1975,9 +1927,9 @@ namespace Hate
             }
 
             int programType;
-            if (!int.TryParse(programInput, out programType) || programType < 1 || programType > 13)
+            if (!int.TryParse(programInput, out programType) || programType < 1 || programType > 14)
             {
-                Console.WriteLine("Invalid option. Please enter a valid option (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12 or 13).");
+                Console.WriteLine("Invalid option. Please enter a valid option (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13 or 14).");
                 Thread.Sleep(1000);
                 Console.Clear();
                 Programas(args, version);
@@ -2225,6 +2177,26 @@ namespace Hate
                 Programas(args, version);
             }
             else if (programType == 13)
+            {
+                string zipUrl = "https://chicho.lol/downloads/SkriptDetector.exe";
+                string zipName = "SkriptDetector.exe";
+                string zipPath = Path.Combine(outputPath, zipName);
+                using (var client = new WebClient())
+                {
+                    client.DownloadFile(zipUrl, zipPath);
+                }
+
+                string ProgramPath = Path.Combine(outputPath, zipName);
+                Process.Start(ProgramPath, $"/folder \"{outputPath}\"");
+                Console.Clear();
+                Thread.Sleep(1000);
+                Console.WriteLine($"{zipName} downloaded successfully!");
+                Console.WriteLine("\n\nPress ENTER to go to the menu...");
+                Console.ReadLine();
+                Console.Clear();
+                Programas(args, version);
+            }
+            else if (programType == 14)
             {
                 Console.Clear();
                 Thread.Sleep(1000);
@@ -2646,7 +2618,6 @@ namespace Hate
             // Eliminar la carpeta al salir del programa
             AppDomain.CurrentDomain.ProcessExit += (sender, eventArgs) =>
             {
-                File.Delete(Assembly.GetExecutingAssembly().Location);
                 if (Directory.Exists(folderPath))
                 {
                     Directory.Delete(folderPath, true); // Borra la carpeta y su contenido
@@ -2875,55 +2846,6 @@ namespace Hate
                 await webhook.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
             }
         }
-
-        //Skript file presence
-        static void SearchFiles(string directory, string extensions, string[] strings, List<ScanResult> results)
-        {
-            try
-            {
-                foreach (string file in Directory.GetFiles(directory, extensions))
-                {
-                    try
-                    {
-                        string content = File.ReadAllText(file);
-                        foreach (string str in strings)
-                        {
-                            if (content.Contains(str))
-                            {
-                                ScanResult result = new ScanResult
-                                {
-                                    FileName = file,
-                                    StringMatched = str
-                                };
-                                results.Add(result);
-                            }
-                        }
-                    }
-                    catch (IOException)
-                    {
-                        Console.ForegroundColor = ConsoleColor.Yellow;
-                        Console.WriteLine($"Unable to access the file '{file}'. Skipping file.");
-                        Console.ForegroundColor = ConsoleColor.White;
-                    }
-                }
-
-                foreach (string subdirectory in Directory.GetDirectories(directory))
-                {
-                    SearchFiles(subdirectory, extensions, strings, results);
-                }
-            }
-            catch (UnauthorizedAccessException)
-            {
-                Console.ForegroundColor = ConsoleColor.Yellow;
-                Console.WriteLine($"Access to the path '{directory}' is denied. Skipping directory.");
-                Console.ForegroundColor = ConsoleColor.White;
-            }
-        }
-        class ScanResult
-    {
-        public string FileName { get; set; }
-        public string StringMatched { get; set; }
-    }
 
     //Pin check
     static void PinCheckFirst(string[] args, string version)
