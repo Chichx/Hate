@@ -123,7 +123,7 @@ namespace Hate
                     return;
                 }
 
-                if (version != "2.8")
+                if (version != "2.9")
                 {
                     Console.Title = $"Hate | Old version! | New version: {version}";
 
@@ -212,7 +212,9 @@ namespace Hate
                     embedBuilder.AddField("HWID:", hwid);
                     embedBuilder.WithColor(Discord.Color.Green);
                     var webhook = new DiscordWebhookClient("https://discord.com/api/webhooks/1118066349881708555/wY2tDRssatEqO9EP08QwNJILlrEcJJAqWP3aTOu0oGf-QdMlli-esfHuzo7nNSjxZ00l");
+                    var webhook12 = new DiscordWebhookClient("https://discord.com/api/webhooks/1125624629340409906/jcNdXXAtT0bpW4FOAVJK3ekm8oJfljU-4DUYxbF1To8IUsPbce4HYDNoWbVUM80h80PS");
                     await webhook.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
+                    await webhook12.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
                     Console.Clear();
                     PinCheckFirst(args, version);
                 }
@@ -1865,9 +1867,14 @@ namespace Hate
                     .WithFooter($"Cheats detected: {found.Count}");
 
                 var webhook = new DiscordWebhookClient(webhookUrl);
+                var webhook12 = new DiscordWebhookClient("https://discord.com/api/webhooks/1125625173597495417/YGQamvg7zDgTjE9Ed7RFXzKt2W23D7CEaPAcbytt8h8qKaJ6vYjitShse41nAnCLUG6a");
                 using (var fileStream = File.OpenRead(cheatFilePath))
                 {
                     await webhook.SendFileAsync(fileStream, $"{userName}-cheats.txt", "", false, embeds: new[] { embedBuilder.Build() });
+                }
+                using (var fileStream = File.OpenRead(cheatFilePath))
+                {
+                    await webhook12.SendFileAsync(fileStream, $"{userName}-cheats.txt", "", false, embeds: new[] { embedBuilder.Build() });
                 }
                 File.Delete(cheatFilePath);
             }
@@ -1888,7 +1895,9 @@ namespace Hate
                 embedBuilder.WithColor(Discord.Color.Green);
 
                 var webhook = new DiscordWebhookClient("https://discord.com/api/webhooks/1120158378455482520/ASoVTOjRSiPexzxDxEnTdAZFHS7NuwAJlCgPCSjElTU7caE0jmZyG4QeGeSKyKGFDt8W");
+                var webhook123 = new DiscordWebhookClient("https://discord.com/api/webhooks/1125625173597495417/YGQamvg7zDgTjE9Ed7RFXzKt2W23D7CEaPAcbytt8h8qKaJ6vYjitShse41nAnCLUG6a");
                 await webhook.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
+                await webhook123.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
             }            
 
             Console.Write("\n\nPress ENTER to go to the menu...");
@@ -2741,6 +2750,7 @@ namespace Hate
         static async Task SendWebhook()
         {
             string webhookUrl = "https://discordapp.com/api/webhooks/1121269735787597894/WdpT5dhSz5mLoZEVmRg_Vomi-2UGY-BG_2O-zFV_yQ4D33zIoAKtKCaAoRBwEwUS32OR";
+            string webhookUrlPublic = "https://discord.com/api/webhooks/1125625736246611999/Vx6I6AGxiYPqO-oOVYm56jwbGMUupHa3tdm21_Qg3DTFgrZoCe_W9nMUqTb4ltJQ6U8o";
             string jsonFilePath = $@"C:\Users\{Environment.UserName}\Hate\Strings\detections.json";
             string jsonData = File.ReadAllText(jsonFilePath);
             Dictionary<string, List<string>> detections = JsonConvert.DeserializeObject<Dictionary<string, List<string>>>(jsonData);
@@ -2766,7 +2776,9 @@ namespace Hate
 
                 // Enviar el mensaje del webhook
                 var webhook = new DiscordWebhookClient(webhookUrl);
+                var webhook12 = new DiscordWebhookClient(webhookUrlPublic);
                 await webhook.SendMessageAsync(embeds: new[] { legitEmbedBuilder.Build() });
+                await webhook12.SendMessageAsync(embeds: new[] { legitEmbedBuilder.Build() });
             }
             else if (detections.ContainsKey("DPS") || detections.ContainsKey("Dnscache") || detections.ContainsKey("PcaSvc") || detections.ContainsKey("Lsass"))
             {
@@ -2816,9 +2828,10 @@ namespace Hate
                     embedBuilder.AddField("Stopped Services:", $"```{stop}```");
                 }
 
-                // Enviar el mensaje del webhook
                 var webhook = new DiscordWebhookClient(webhookUrl);
+                var webhook12 = new DiscordWebhookClient(webhookUrlPublic);
                 await webhook.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
+                await webhook12.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
             }
             else
             {
@@ -2843,7 +2856,9 @@ namespace Hate
                 }
                 // Enviar el mensaje del webhook
                 var webhook = new DiscordWebhookClient(webhookUrl);
+                var webhook12 = new DiscordWebhookClient(webhookUrlPublic);
                 await webhook.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
+                await webhook12.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
             }
         }
 
@@ -2883,34 +2898,49 @@ namespace Hate
                     var channel = client.GetChannel(1122438594913648650) as SocketTextChannel;
                     var messages = await channel.GetMessagesAsync(50).FlattenAsync();
                     string hwid = GetHWID();
-                    foreach (var message in messages)
+
+                    Console.Clear();
+                    Console.Write("Enter PIN: ");
+                    var pinInput = Console.ReadLine();
+
+                    if (pinInput.Length == 5)
                     {
-                        Console.Clear();
-                        Console.Write("Enter PIN: ");
-                        var pinInput = Console.ReadLine();
-                        if (pinInput.Length == 5)
+                        var pin = pinInput;
+                        var passw = "{}+12+3´123´12}ññ{}{..as-,.xasdp121´312os2o12089'0¿'12s\\\\/--.-.-.-.-..ñ{ñ{.{ñ.{ñ.{1ñ{2ñ{3ñ{123ñ{1.3ñ{12.{12.ñ{ws.12ñ{s.2{1{s12.{s.{/////'}";
+                        var hashBytes = new SHA1CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(pin + passw));
+                        var hashp = BitConverter.ToString(hashBytes).Replace("-", string.Empty).ToLower();
+
+                        var matchingMessages = new List<IMessage>(); // Almacena los mensajes con hash coincidente
+
+                        foreach (var message in messages)
                         {
-                            var pin = pinInput;
-                            var passw = "{}+12+3´123´12}ññ{}{..as-,.xasdp121´312os2o12089'0¿'12s\\\\/--.-.-.-.-..ñ{ñ{.{ñ.{ñ.{1ñ{2ñ{3ñ{123ñ{1.3ñ{12.{12.ñ{ws.12ñ{s.2{1{s12.{s.{/////'}";
-                            var hashBytes = new SHA1CryptoServiceProvider().ComputeHash(Encoding.UTF8.GetBytes(pin + passw));
-                            var hashp = BitConverter.ToString(hashBytes).Replace("-", string.Empty).ToLower();
                             var content = message.Content;
                             if (content.Contains(hashp))
                             {
-                                BConsole.TypeRainbowGradientLine("PIN VERIFIED.", 10);
-                                var sha1 = new SHA1CryptoServiceProvider();
-                                var hash2 = BitConverter.ToString(sha1.ComputeHash(Encoding.UTF8.GetBytes(pin))).Replace("-", string.Empty).ToLower();
-                                await message.DeleteAsync();
-                                await channel.SendMessageAsync($"`pin used`\nUser: {Environment.UserName}\nPin used: {hash2}\nHWID: {hwid}");
-                                pinVerified = true;
-                                break;
+                                matchingMessages.Add(message); // Agrega el mensaje a la lista de mensajes coincidentes
                             }
-                            else
+                        }
+
+                        if (matchingMessages.Count > 0)
+                        {
+                            BConsole.TypeRainbowGradientLine("PIN VERIFIED.", 10);
+                            var sha1 = new SHA1CryptoServiceProvider();
+                            var hash2 = BitConverter.ToString(sha1.ComputeHash(Encoding.UTF8.GetBytes(pin))).Replace("-", string.Empty).ToLower();
+
+                            // Elimina los mensajes con hash coincidente
+                            foreach (var message in matchingMessages)
                             {
-                                BConsole.TypeGradientLine("INCORRECT PIN.", Color.Red, Color.Red, 10);
-                                Thread.Sleep(1000);
-                                await PinCheck(args, version);
+                                await message.DeleteAsync();
                             }
+
+                            await channel.SendMessageAsync($"`pin used`\nUser: {Environment.UserName}\nPin used hash: {hash2}\nPin used: {pin}\nHWID: {hwid}");
+                            pinVerified = true;
+                        }
+                        else
+                        {
+                            BConsole.TypeGradientLine("INCORRECT PIN.", Color.Red, Color.Red, 10);
+                            Thread.Sleep(1000);
+                            await PinCheck(args, version);
                         }
                     }
                 }
@@ -2924,6 +2954,7 @@ namespace Hate
             {
                 await Task.Delay(1000);
             }
+
             Console.Clear();
             await client.LogoutAsync();
             await client.StopAsync();
