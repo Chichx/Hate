@@ -123,7 +123,7 @@ namespace Hate
                     return;
                 }
 
-                if (version != "2.9")
+                if (version != "3.0")
                 {
                     Console.Title = $"Hate | Old version! | New version: {version}";
 
@@ -2228,7 +2228,7 @@ namespace Hate
                     Directory.CreateDirectory(outputPath);
                 }
                 WebClient client = new WebClient();
-                byte[] fileData = client.DownloadData("https://cdn.discordapp.com/attachments/916928290449662003/1073342691229847592/xxstrings64.exe");
+                byte[] fileData = client.DownloadData("https://anticheat.site/strings/downloads/");
                 string fileDirectory = Path.Combine(outputPath, "xxstrings.exe");
                 File.WriteAllBytes(fileDirectory, fileData);
 
@@ -2309,7 +2309,7 @@ namespace Hate
             }
             catch
             {
-                Console.WriteLine("Unable to scan Check #1.");
+                Console.WriteLine($"Unable to scan Check #1.");
                 Thread.Sleep(1000);
                 DPSScan(args, version);
             }
@@ -2403,7 +2403,7 @@ namespace Hate
             }
             catch
             {
-                Console.WriteLine("Unable to scan Check Check #2.");
+                Console.WriteLine("Unable to scan Check #2.");
                 Thread.Sleep(1000);
                 PcaSvcs(args, version);
             }
@@ -2498,7 +2498,7 @@ namespace Hate
             }
             catch
             {
-                Console.WriteLine("Unable to scan Check Check #3.");
+                Console.WriteLine($"Unable to scan Check #3.");
                 Thread.Sleep(1000);
                 LsassScan(args, version);
             }
@@ -2591,7 +2591,7 @@ namespace Hate
             }
             catch
             {
-                Console.WriteLine("Unable to scan Check #4.");
+                Console.WriteLine($"Unable to scan Check #4.");
                 Console.ReadLine();
             }
             string json = JsonConvert.SerializeObject(jsonData, Formatting.Indented);
