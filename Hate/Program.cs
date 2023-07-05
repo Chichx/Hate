@@ -321,7 +321,7 @@ namespace Hate
                     case 12:
                         Console.Title = $"Hate | Exit and Credits";
                         Console.Clear();
-                        ExitAndCredits(args, version);
+                        ExitAndCredits();
                         break;
 
                 }
@@ -2213,7 +2213,7 @@ namespace Hate
             }
         }
 
-        public static void DNSCache(string[] args, string version)
+        private static void DNSCache(string[] args, string version)
 
         {
             try
@@ -2258,7 +2258,7 @@ namespace Hate
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("WARNING: The Check #1 process is stopped and cannot be scanned.");
                     detect.Add($"DNSCache has stopped.", jsonData, "Stopped Services");
-                    Thread.Sleep(1000);
+                    Thread.Sleep(500);
                     DPSScan(args, version);
                     return;
                 }
@@ -2299,22 +2299,22 @@ namespace Hate
                 }
                 if (!stringsEncontradas)
                 {
-                    Thread.Sleep(1000);
+                    Thread.Sleep(500);
                 }
 
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("\nDone!");
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
                 DPSScan(args, version);
             }
             catch
             {
                 Console.WriteLine($"Unable to scan Check #1.");
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
                 DPSScan(args, version);
             }
         }
-        public static void DPSScan(string[] args, string version)
+        private static void DPSScan(string[] args, string version)
         {
             try
             {
@@ -2351,7 +2351,7 @@ namespace Hate
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("WARNING: The Check #2 process is stopped and cannot be scanned.");
                     detect.Add($"DPS has stopped.", jsonData, "Stopped Services");
-                    Thread.Sleep(1000);
+                    Thread.Sleep(500);
                     PcaSvcs(args, version);
                     return;
                 }
@@ -2394,22 +2394,22 @@ namespace Hate
                 }
                 if (!stringsEncontradas)
                 {
-                    Thread.Sleep(1000);
+                    Thread.Sleep(500);
                 }
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("\nDone!");
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
                 PcaSvcs(args, version);
             }
             catch
             {
                 Console.WriteLine("Unable to scan Check #2.");
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
                 PcaSvcs(args, version);
             }
         }
 
-        public static void PcaSvcs(string[] args, string version)
+        private static void PcaSvcs(string[] args, string version)
         {
             try
             {
@@ -2446,7 +2446,7 @@ namespace Hate
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("WARNING: The Check #3 process is stopped and cannot be scanned.");
                     detect.Add($"PcaSvc has stopped.", jsonData, "Stopped Services");
-                    Thread.Sleep(1000);
+                    Thread.Sleep(500);
                     LsassScan(args, version);
                     return;
                 }
@@ -2489,22 +2489,22 @@ namespace Hate
                 }
                 if (!stringsEncontradas)
                 {
-                    Thread.Sleep(1000);
+                    Thread.Sleep(500);
                 }
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("\nDone!");
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
                 LsassScan(args, version);
             }
             catch
             {
                 Console.WriteLine($"Unable to scan Check #3.");
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
                 LsassScan(args, version);
             }
         }
 
-        public static void LsassScan(string[] args, string version)
+        private static void LsassScan(string[] args, string version)
         {
             try
             {
@@ -2540,7 +2540,7 @@ namespace Hate
                     Console.ForegroundColor = ConsoleColor.Yellow;
                     Console.WriteLine("WARNING: The Check #4 process cannot be scanned.");
                     detect.Add($"Lsass has stopped.", jsonData, "Stopped Services");
-                    Thread.Sleep(1000);
+                    Thread.Sleep(500);
                     return;
                 }
 
@@ -2582,12 +2582,12 @@ namespace Hate
                 }
                 if (!stringsEncontradas)
                 {
-                    Thread.Sleep(1000);
+                    Thread.Sleep(500);
                 }
                 Console.ForegroundColor = ConsoleColor.Green;
                 Console.WriteLine("\nDone!");
                 Console.WriteLine("Please wait for result!");
-                Thread.Sleep(1000);
+                Thread.Sleep(500);
             }
             catch
             {
@@ -2601,7 +2601,7 @@ namespace Hate
             CheckUser(args, version);
         }
 
-        private static void ExitAndCredits(string[] args, string version)
+        private static void ExitAndCredits()
         {
             Console.OutputEncoding = Encoding.UTF8;
             Console.ForegroundColor = ConsoleColor.Red;
