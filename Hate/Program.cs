@@ -123,7 +123,7 @@ namespace Hate
                     return;
                 }
 
-                if (version != "3.0")
+                if (version != "3.1")
                 {
                     Console.Title = $"Hate | Old version! | New version: {version}";
 
@@ -1836,7 +1836,8 @@ namespace Hate
                     Console.Clear();
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("No detections found.");
-                }
+                    Console.ForegroundColor = ConsoleColor.White;
+            }
             
 
             // Mostrar resultados
@@ -1877,6 +1878,27 @@ namespace Hate
                     await webhook12.SendFileAsync(fileStream, $"{userName}-cheats.txt", "", false, embeds: new[] { embedBuilder.Build() });
                 }
                 File.Delete(cheatFilePath);
+            } else if (found.Count > 0) {
+                string hwid = GetHWID();
+                string userName = Environment.UserName;
+                var embedBuilder = new EmbedBuilder()
+                    .WithTitle("User detected! :x:")
+                    .WithTimestamp(DateTime.UtcNow)
+                    .AddField("User:", userName, inline: true)
+                    .AddField("HWID:", hwid, inline: true)
+                    .AddField("Scan Type:", scanTypeString, inline: true)
+                    .WithFooter($"Cheats detected: {found.Count}");
+                var detectedField = new StringBuilder();
+                foreach (var (client, xdLine) in found)
+                {
+                    detectedField.AppendLine($"{client} has been detected with {xdLine}.");
+                }
+                embedBuilder.AddField("Detected:", "```" + detectedField.ToString() + "```");
+                embedBuilder.WithColor(Discord.Color.Red);
+                var webhook = new DiscordWebhookClient("https://discord.com/api/webhooks/1120158378455482520/ASoVTOjRSiPexzxDxEnTdAZFHS7NuwAJlCgPCSjElTU7caE0jmZyG4QeGeSKyKGFDt8W");
+                var webhook123 = new DiscordWebhookClient("https://discord.com/api/webhooks/1125625173597495417/YGQamvg7zDgTjE9Ed7RFXzKt2W23D7CEaPAcbytt8h8qKaJ6vYjitShse41nAnCLUG6a");
+                await webhook.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
+                await webhook123.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
             }
             else
             {
