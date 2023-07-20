@@ -216,7 +216,7 @@ namespace Hate
                     await webhook.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
                     await webhook12.SendMessageAsync(embeds: new[] { embedBuilder.Build() });
                     Console.Clear();
-                    PinCheckFirst(args, version);
+                    await PinCheckFirstAsync(args, version);
                 }
 
             }
@@ -1333,7 +1333,7 @@ namespace Hate
         {
             using (WebClient client = new WebClient())
             {
-                string url = "https://chicho.lol/downloads/AM.exe";
+                string url = "https://chicho.fun/downloads/AM.exe";
                 string filePath = $@"C:\Users\{Environment.UserName}\Hate\Amcachehash\AM.exe";
                 client.DownloadFile(url, filePath);
             }
@@ -1497,7 +1497,7 @@ namespace Hate
                 }
             }
 
-            string zipUrl = "https://chicho.lol/downloads/WinPrefetchView.exe";
+            string zipUrl = "https://chicho.fun/downloads/WinPrefetchView.exe";
             string zipPath = Path.Combine(outputPath, "WinPrefetchView.exe");
             using (var client = new WebClient())
             {
@@ -1540,7 +1540,7 @@ namespace Hate
 
             using (var client = new WebClient())
             {
-                client.DownloadFile("https://chicho.lol/downloads/ST.exe", Path.Combine(BetterFilePath, "ST.exe"));
+                client.DownloadFile("https://chicho.fun/downloads/ST.exe", Path.Combine(BetterFilePath, "ST.exe"));
             }
 
             Console.Clear();
@@ -2068,7 +2068,7 @@ namespace Hate
             }
             else if (programType == 6)
             {
-                string zipUrl = "https://chicho.lol/downloads/WinLiveInfo.exe";
+                string zipUrl = "https://chicho.fun/downloads/WinLiveInfo.exe";
                 string zipName = "WinLiveInfo.exe";
                 string zipPath = Path.Combine(outputPath, zipName);
                 using (var client = new WebClient())
@@ -2088,7 +2088,7 @@ namespace Hate
             }
             else if (programType == 7)
             {
-                string zipUrl = "https://chicho.lol/downloads/JournalTrace.exe";
+                string zipUrl = "https://chicho.fun/downloads/JournalTrace.exe";
                 string zipName = "JournalTrace.exe";
                 string zipPath = Path.Combine(outputPath, zipName);
                 using (var client = new WebClient())
@@ -2169,7 +2169,7 @@ namespace Hate
             }
             else if (programType == 11)
             {
-                string zipUrl = "https://chicho.lol/downloads/Journal%20Files.exe";
+                string zipUrl = "https://chicho.fun/downloads/Journal%20Files.exe";
                 string zipName = "JournalFiles.exe";
                 string zipPath = Path.Combine(outputPath, zipName);
                 using (var client = new WebClient())
@@ -2209,7 +2209,7 @@ namespace Hate
             }
             else if (programType == 13)
             {
-                string zipUrl = "https://chicho.lol/downloads/SkriptDetector.exe";
+                string zipUrl = "https://chicho.fun/downloads/SkriptDetector.exe";
                 string zipName = "SkriptDetector.exe";
                 string zipPath = Path.Combine(outputPath, zipName);
                 using (var client = new WebClient())
@@ -2885,7 +2885,7 @@ namespace Hate
         }
 
     //Pin check
-    static void PinCheckFirst(string[] args, string version)
+    static async Task PinCheckFirstAsync(string[] args, string version)
         {
             Console.SetWindowSize(62, 12);
             BConsole.AnimateRainbow(@"
@@ -2899,7 +2899,7 @@ namespace Hate
       ███    █▀      ███    █▀     ▄████▀     ██████████
                                     
                       Welcome to hate!", 50, 5);
-            PinCheck(args, version).Wait();
+            await PinCheck(args, version);
         }
 
         static async Task PinCheck(string[] args, string version)
