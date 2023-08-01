@@ -278,6 +278,19 @@
   <ItemGroup>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Sections\AmCache.cs" />
+    <Compile Include="Sections\AutomaticStringScanner.cs" />
+    <Compile Include="Sections\BetterDetectFile.cs" />
+    <Compile Include="Sections\ExecutedProgram.cs" />
+    <Compile Include="Sections\ManualStringScanner.cs" />
+    <Compile Include="Sections\Partition.cs" />
+    <Compile Include="Sections\Pca.cs" />
+    <Compile Include="Sections\PinCheck.cs" />
+    <Compile Include="Sections\Programas.cs" />
+    <Compile Include="Sections\SelfDestruct.cs" />
+    <Compile Include="Sections\SimpleDetects.cs" />
+    <Compile Include="Sections\TimeModification.cs" />
+    <Compile Include="Sections\WinPrefetch.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="..\.editorconfig">
