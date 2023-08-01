@@ -283,6 +283,7 @@
     <Compile Include="Sections\BetterDetectFile.cs" />
     <Compile Include="Sections\ExecutedProgram.cs" />
     <Compile Include="Sections\ManualStringScanner.cs" />
+    <Compile Include="Sections\MD5Scanner.cs" />
     <Compile Include="Sections\Partition.cs" />
     <Compile Include="Sections\Pca.cs" />
     <Compile Include="Sections\PinCheck.cs" />
